@@ -1,3 +1,0 @@
-[ApkAdmin/server]2025-10-17 13:08:30.430	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/web/user.go:43	用户密码修改失败!	{"error": "旧密码不正确"}
-[ApkAdmin/server]2025-10-17 13:09:00.412	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/web/user.go:43	用户密码修改失败!	{"error": "旧密码不正确"}
-[ApkAdmin/server]2025-10-17 18:51:30.233	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/project/payment_provider.go:103	更新失败!	{"error": "Error 1054 (42S22): Unknown column 'config_schema' in 'field list'"}

@@ -1,7 +1,0 @@
-[ApkAdmin/server]2025-10-19 11:17:01.855	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 1, "ip": "127.0.0.1"}
-[ApkAdmin/server]2025-10-19 11:17:23.600	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 2, "ip": "127.0.0.1"}
-[ApkAdmin/server]2025-10-19 11:21:12.674	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 1, "ip": "127.0.0.1"}
-[ApkAdmin/server]2025-10-19 11:28:33.341	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 2, "ip": "127.0.0.1"}
-[ApkAdmin/server]2025-10-19 11:33:22.164	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 3, "ip": "127.0.0.1"}
-[ApkAdmin/server]2025-10-19 11:33:42.647	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 4, "ip": "127.0.0.1"}
-[ApkAdmin/server]2025-10-19 11:34:02.912	[33mwarn[0m	/Volumes/workspace/GoProjects/ApkAdmin/service/project/userService.go:575	登录失败	{"phone": "13163707701", "failed_attempts": 5, "ip": "127.0.0.1"}
