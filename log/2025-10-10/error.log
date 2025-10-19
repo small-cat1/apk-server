@@ -1,0 +1,4 @@
+[ApkAdmin/server]2025-10-10 17:11:53.962	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/project/category.go:117	删除失败!	{"error": "该分类下存在应用，请先解除使用"}
+[ApkAdmin/server]2025-10-10 17:12:46.254	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/project/category.go:117	删除失败!	{"error": "该分类下存在应用，请先解除使用"}
+[ApkAdmin/server]2025-10-10 22:11:40.077	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router_biz.go:24	StorePath:uploads/file
+[ApkAdmin/server]2025-10-10 22:11:40.078	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router_biz.go:25	Path:uploads/file

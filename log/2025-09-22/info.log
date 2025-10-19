@@ -1,0 +1,130 @@
+[ApkAdmin/server]2025-09-22 09:03:49.544	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:03:49.546	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:04:03.430	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:04:03.431	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:04:03.442	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:119	router register success
+[ApkAdmin/server]2025-09-22 09:05:59.554	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:05:59.555	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:06:06.830	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:06:06.831	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:06:06.857	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 09:41:34.565	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:41:34.566	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:42:29.655	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:42:29.657	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:42:29.677	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 09:45:09.317	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:45:09.318	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:45:17.610	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:45:17.611	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:45:17.626	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 09:46:31.973	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:46:31.974	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:46:38.643	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:46:38.644	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:46:38.664	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 09:48:08.916	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:48:08.917	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:48:16.318	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:48:16.319	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:48:16.344	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 09:48:59.822	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 09:48:59.823	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 09:49:10.760	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 09:49:10.762	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 09:49:10.791	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 10:11:39.623	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 10:11:39.624	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 10:11:55.358	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 10:11:55.359	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 10:11:55.375	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 10:14:26.961	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 10:14:26.962	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 10:14:40.516	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 10:14:40.518	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 10:14:40.543	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 14:50:13.054	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 14:50:13.055	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 15:10:59.596	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 15:10:59.598	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 15:10:59.611	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 15:36:40.495	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 15:36:40.496	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 15:40:42.462	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 15:40:42.465	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 15:40:42.481	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 15:47:39.874	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 15:47:39.876	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 15:47:51.528	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 15:47:51.529	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 15:47:51.557	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 15:54:37.836	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 15:54:37.836	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 15:54:46.628	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 15:54:46.629	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 15:54:46.645	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 15:57:40.501	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 15:57:40.502	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 15:57:47.415	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 15:57:47.416	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 15:57:47.429	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 16:00:48.119	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 16:00:48.120	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 16:00:54.316	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 16:00:54.316	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 16:00:54.330	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 16:24:15.597	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 16:24:15.597	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 16:24:34.722	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 16:24:34.724	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 16:24:34.762	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 16:29:22.287	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 16:29:22.289	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 16:29:36.185	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 16:29:36.186	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 16:29:36.226	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 16:31:50.514	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 16:31:50.515	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 16:32:14.437	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 16:32:14.439	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 16:32:14.472	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 16:39:01.750	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 16:39:01.750	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 16:39:15.017	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 16:39:15.019	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 16:39:15.041	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 16:58:40.815	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 16:58:40.816	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 16:58:51.671	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 16:58:51.673	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 16:58:51.700	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 17:00:22.023	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 17:00:22.024	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 17:00:28.644	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 17:00:28.644	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 17:00:28.656	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 17:16:30.488	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 17:16:30.490	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 17:16:41.764	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 17:16:41.765	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 17:16:41.781	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 17:18:00.664	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 17:18:00.664	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 17:18:03.345	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 17:18:03.346	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 17:18:03.358	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 17:18:43.193	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 17:18:43.194	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 17:18:49.782	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 17:18:49.783	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 17:18:49.796	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 17:22:04.122	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 17:22:04.123	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 17:22:11.431	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 17:22:11.431	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 17:22:11.443	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:120	router register success
+[ApkAdmin/server]2025-09-22 21:03:02.088	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-22 21:03:02.091	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-22 21:03:16.469	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-22 21:03:16.471	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-22 21:03:16.507	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:121	router register success

@@ -1,0 +1,30 @@
+[ApkAdmin/server]2025-09-20 07:30:25.617	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-20 07:30:25.619	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-20 07:44:22.162	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-20 07:44:22.163	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-20 07:44:22.181	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:118	router register success
+[ApkAdmin/server]2025-09-20 08:00:01.401	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-20 08:00:01.402	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-20 08:00:14.813	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-20 08:00:14.814	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-20 08:00:14.825	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:118	router register success
+[ApkAdmin/server]2025-09-20 08:13:14.308	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-20 08:13:14.309	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-20 08:13:26.006	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-20 08:13:26.007	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-20 08:13:26.023	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:118	router register success
+[ApkAdmin/server]2025-09-20 10:16:53.492	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-20 10:16:53.494	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-20 10:17:06.867	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-20 10:17:06.868	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-20 10:17:06.883	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:118	router register success
+[ApkAdmin/server]2025-09-20 14:38:57.548	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-20 14:38:57.549	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-20 14:39:12.039	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-20 14:39:12.040	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-20 14:39:12.057	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:118	router register success
+[ApkAdmin/server]2025-09-20 14:41:02.131	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-09-20 14:41:02.133	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-09-20 14:41:13.156	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-09-20 14:41:13.157	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:61	register swagger handler
+[ApkAdmin/server]2025-09-20 14:41:13.175	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:119	router register success

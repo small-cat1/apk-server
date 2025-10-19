@@ -1,0 +1,2 @@
+[ApkAdmin/server]2025-10-14 10:06:53.722	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/project/app_package.go:99	更新失败!	{"error": "Error 1054 (42S22): Unknown column 'is_featured' in 'field list'"}
+[ApkAdmin/server]2025-10-14 10:08:43.346	[31merror[0m	/Volumes/workspace/GoProjects/ApkAdmin/api/v1/project/app_package.go:99	更新失败!	{"error": "Error 1054 (42S22): Unknown column 'is_featured' in 'field list'"}

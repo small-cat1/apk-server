@@ -1,0 +1,35 @@
+[ApkAdmin/server]2025-10-14 10:09:16.187	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-10-14 10:09:16.187	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-10-14 10:09:29.192	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-10-14 10:09:29.195	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/redis.go:35	redis connect ping response:	{"name": "", "pong": "PONG"}
+[ApkAdmin/server]2025-10-14 10:09:29.196	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:59	use middleware cors
+[ApkAdmin/server]2025-10-14 10:09:29.196	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:62	register swagger handler
+[ApkAdmin/server]2025-10-14 10:09:29.216	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:123	router register success
+[ApkAdmin/server]2025-10-14 10:11:50.335	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-10-14 10:11:50.336	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-10-14 10:11:59.705	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-10-14 10:11:59.707	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/redis.go:35	redis connect ping response:	{"name": "", "pong": "PONG"}
+[ApkAdmin/server]2025-10-14 10:11:59.708	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:59	use middleware cors
+[ApkAdmin/server]2025-10-14 10:11:59.709	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:62	register swagger handler
+[ApkAdmin/server]2025-10-14 10:11:59.724	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:123	router register success
+[ApkAdmin/server]2025-10-14 10:43:00.081	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-10-14 10:43:00.082	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-10-14 10:43:14.729	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-10-14 10:43:14.732	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/redis.go:35	redis connect ping response:	{"name": "", "pong": "PONG"}
+[ApkAdmin/server]2025-10-14 10:43:14.732	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:59	use middleware cors
+[ApkAdmin/server]2025-10-14 10:43:14.733	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:62	register swagger handler
+[ApkAdmin/server]2025-10-14 10:43:14.746	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:123	router register success
+[ApkAdmin/server]2025-10-14 15:25:27.800	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-10-14 15:25:27.801	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-10-14 15:25:42.446	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-10-14 15:25:42.449	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/redis.go:35	redis connect ping response:	{"name": "", "pong": "PONG"}
+[ApkAdmin/server]2025-10-14 15:25:42.450	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:59	use middleware cors
+[ApkAdmin/server]2025-10-14 15:25:42.450	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:62	register swagger handler
+[ApkAdmin/server]2025-10-14 15:25:42.468	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:123	router register success
+[ApkAdmin/server]2025-10-14 16:17:41.856	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:48	关闭WEB服务...
+[ApkAdmin/server]2025-10-14 16:17:41.857	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/core/server_run.go:59	WEB服务已关闭
+[ApkAdmin/server]2025-10-14 16:17:53.933	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/gorm.go:78	register table success
+[ApkAdmin/server]2025-10-14 16:17:53.935	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/redis.go:35	redis connect ping response:	{"name": "", "pong": "PONG"}
+[ApkAdmin/server]2025-10-14 16:17:53.936	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:59	use middleware cors
+[ApkAdmin/server]2025-10-14 16:17:53.936	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:62	register swagger handler
+[ApkAdmin/server]2025-10-14 16:17:53.956	[34minfo[0m	/Volumes/workspace/GoProjects/ApkAdmin/initialize/router.go:123	router register success
