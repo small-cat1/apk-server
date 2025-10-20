@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"ApkAdmin/utils"
 	"errors"
 	"mime/multipart"
 	"time"
@@ -26,9 +27,21 @@ func (*AliyunOSS) UploadFile(file *multipart.FileHeader) (string, string, error)
 		return "", "", errors.New("function file.Open() Failed, err:" + openError.Error())
 	}
 	defer f.Close() // 创建文件 defer 关闭
+	fileType := utils.GetFileType(file.Filename)
+	subPath := ""
+	switch fileType {
+	case "image":
+		subPath = "images"
+	case "video":
+		subPath = "videos"
+	case "document":
+		subPath = "documents"
+	default:
+		subPath = "files"
+	}
 	// 上传阿里云路径 文件名格式 自己可以改 建议保证唯一性
 	// yunFileTmpPath := filepath.Join("uploads", time.Now().Format("2006-01-02")) + "/" + file.Filename
-	yunFileTmpPath := global.GVA_CONFIG.AliyunOSS.BasePath + "/" + "uploads" + "/" + time.Now().Format("2006-01-02") + "/" + file.Filename
+	yunFileTmpPath := global.GVA_CONFIG.AliyunOSS.BasePath + "/" + subPath + "/" + time.Now().Format("2006-01-02") + "/" + file.Filename
 
 	// 上传文件流。
 	err = bucket.PutObject(yunFileTmpPath, f)

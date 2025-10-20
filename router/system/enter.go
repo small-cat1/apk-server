@@ -15,6 +15,7 @@ type RouterGroup struct {
 	OperationRecordRouter
 	DictionaryDetailRouter
 	AuthorityBtnRouter
+	GoogleAuthRouter
 }
 
 var (
@@ -29,4 +30,5 @@ var (
 	authorityMenuApi    = api.ApiGroupApp.SystemApiGroup.AuthorityMenuApi
 	operationRecordApi  = api.ApiGroupApp.SystemApiGroup.OperationRecordApi
 	dictionaryDetailApi = api.ApiGroupApp.SystemApiGroup.DictionaryDetailApi
+	googleAuthApi       = api.ApiGroupApp.SystemApiGroup.GoogleAuthApi
 )

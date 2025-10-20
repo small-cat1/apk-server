@@ -14,6 +14,7 @@ type ApiGroup struct {
 	OperationRecordApi
 	DictionaryDetailApi
 	AuthorityBtnApi
+	GoogleAuthApi
 }
 
 var (

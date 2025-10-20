@@ -11,14 +11,15 @@ import (
 
 // SetSystemConfigRequest 设置系统配置请求
 type SetSystemConfigRequest struct {
-	Scope  string                 `json:"scope" binding:"required"`  // 作用域：website、service、pay、seo
-	Config map[string]interface{} `json:"config" binding:"required"` // 配置项
+	Scope      string                 `json:"scope" binding:"required"`  // 作用域：website、service、pay、seo
+	Config     map[string]interface{} `json:"config" binding:"required"` // 配置项
+	GoogleCode string                 `json:"googleCode"`
 }
 
 // Validate 验证请求参数
 func (r *SetSystemConfigRequest) Validate() error {
 	// 验证scope
-	validScopes := []string{"website", "service", "pay", "seo"}
+	validScopes := []string{"website", "service", "commission", "seo"}
 	if !contains(validScopes, r.Scope) {
 		return fmt.Errorf("invalid scope: %s, must be one of: %s", r.Scope, strings.Join(validScopes, ", "))
 	}
@@ -32,12 +33,77 @@ func (r *SetSystemConfigRequest) Validate() error {
 		return r.validateWebsiteConfig()
 	case "service":
 		return r.validateServiceConfig()
-	case "pay":
-		return r.validatePayConfig()
+	case "commission":
+		return r.validateCommissionConfig()
 	case "seo":
 		return r.validateSEOConfig()
 	default:
 		return nil
+	}
+}
+
+// validateCommissionConfig 验证分佣配置
+func (r *SetSystemConfigRequest) validateCommissionConfig() error {
+
+	// 验证最低提现金额
+	if minWithdraw := r.GetFloat64Value("minWithdraw"); minWithdraw > 0 {
+		if minWithdraw < 1 || minWithdraw > 10000 {
+			return errors.New("minWithdraw must be between 1 and 10000")
+		}
+	}
+
+	// 验证最高提现金额
+	if maxWithdraw := r.GetFloat64Value("maxWithdraw"); maxWithdraw > 0 {
+		if maxWithdraw < 100 || maxWithdraw > 100000 {
+			return errors.New("maxWithdraw must be between 100 and 100000")
+		}
+	}
+
+	// 验证最低提现不能大于等于最高提现
+	minWithdraw := r.GetFloat64Value("minWithdraw")
+	maxWithdraw := r.GetFloat64Value("maxWithdraw")
+	if minWithdraw > 0 && maxWithdraw > 0 && minWithdraw >= maxWithdraw {
+		return errors.New("minWithdraw must be less than maxWithdraw")
+	}
+
+	// 验证每日提现次数
+	if dailyCount := r.GetIntValue("dailyWithdrawCount"); dailyCount > 0 {
+		if dailyCount < 1 || dailyCount > 10 {
+			return errors.New("dailyWithdrawCount must be between 1 and 10")
+		}
+	}
+
+	// 验证提现手续费
+	if fee := r.GetFloat64Value("withdrawFee"); fee > 0 {
+		if fee < 0 || fee > 10 {
+			return errors.New("withdrawFee must be between 0 and 10")
+		}
+	}
+
+	// 验证必填字段
+	requiredFields := []string{"minWithdraw", "maxWithdraw", "dailyWithdrawCount", "settlementCycle", "withdrawProcessDays"}
+	for _, field := range requiredFields {
+		if _, ok := r.Config[field]; !ok {
+			return fmt.Errorf("required field %s is missing", field)
+		}
+	}
+
+	return nil
+}
+
+// GetFloat64Value 获取浮点数类型配置值
+func (r *SetSystemConfigRequest) GetFloat64Value(key string) float64 {
+	switch val := r.Config[key].(type) {
+	case float64:
+		return val
+	case int:
+		return float64(val)
+	case string:
+		var f float64
+		fmt.Sscanf(val, "%f", &f)
+		return f
+	default:
+		return 0
 	}
 }
 
@@ -112,18 +178,6 @@ func (r *SetSystemConfigRequest) validateServiceConfig() error {
 	return nil
 }
 
-// validatePayConfig 验证支付配置
-func (r *SetSystemConfigRequest) validatePayConfig() error {
-	// 验证回调地址
-	if callbackURL, ok := r.Config["pay_callback_url"].(string); ok && callbackURL != "" {
-		if !isValidURL(callbackURL) {
-			return errors.New("pay_callback_url must be a valid URL")
-		}
-	}
-
-	return nil
-}
-
 // validateSEOConfig 验证SEO配置
 func (r *SetSystemConfigRequest) validateSEOConfig() error {
 	// 验证Google Analytics ID格式
@@ -142,7 +196,7 @@ type GetSystemConfigRequest struct {
 
 // Validate 验证请求参数
 func (r *GetSystemConfigRequest) Validate() error {
-	validScopes := []string{"website", "service", "pay", "seo"}
+	validScopes := []string{"website", "service", "commission", "seo"}
 	if !contains(validScopes, r.Scope) {
 		return fmt.Errorf("invalid scope: %s, must be one of: %s", r.Scope, strings.Join(validScopes, ", "))
 	}
@@ -156,7 +210,7 @@ type GetConfigByKeyRequest struct {
 
 // Validate 验证请求参数
 func (r *GetConfigByKeyRequest) Validate() error {
-	validScopes := []string{"website", "service", "pay", "seo"}
+	validScopes := []string{"website", "service", "commission", "seo"}
 	if !contains(validScopes, r.Scope) {
 		return fmt.Errorf("invalid scope: %s, must be one of: %s", r.Scope, strings.Join(validScopes, ", "))
 	}

@@ -4,7 +4,9 @@ import (
 	"ApkAdmin/global"
 	"ApkAdmin/model/common/response"
 	"ApkAdmin/model/project/request"
+	"ApkAdmin/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/pquerna/otp/totp"
 	"go.uber.org/zap"
 )
 
@@ -57,6 +59,26 @@ func (w WebsiteConfigApi) SetSystemConfig(c *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
+	}
+	if req.Scope == "commission" {
+		// 获取当前用户
+		uuid := utils.GetUserUuid(c)
+		// 获取用户谷歌验证器密钥
+		user, err := sysUserService.GetUserInfo(uuid)
+		if err != nil {
+			response.FailWithMessage("获取用户信息失败", c)
+			return
+		}
+		if !user.GoogleAuthStatus {
+			response.FailWithMessage("未绑定谷歌验证器,无法操作", c)
+			return
+		}
+		// 验证谷歌验证码
+		valid := totp.Validate(req.GoogleCode, user.GoogleAuthKey)
+		if !valid {
+			response.FailWithMessage("谷歌验证码不正确！", c)
+			return
+		}
 	}
 	err = websiteConfigService.SetConfig(req.Scope, req.Config)
 	if err != nil {

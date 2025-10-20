@@ -15,6 +15,7 @@ type ApiGroup struct {
 	WebsiteConfigApi
 	AppAccountApi
 	SystemAnnouncementApi
+	CommissionTierApi
 }
 
 var (
@@ -31,4 +32,6 @@ var (
 	paymentAccountService        = service.ServiceGroupApp.ProjectServiceGroup.PaymentAccountService
 	websiteConfigService         = service.ServiceGroupApp.ProjectServiceGroup.SystemConfigService
 	systemAnnouncementService    = service.ServiceGroupApp.ProjectServiceGroup.SystemAnnouncementService
+	sysUserService               = service.ServiceGroupApp.SystemServiceGroup.UserService
+	commissionTierService        = service.ServiceGroupApp.ProjectServiceGroup.CommissionTierService
 )

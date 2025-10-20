@@ -6,10 +6,8 @@ import (
 
 type RouterGroup struct {
 	FileUploadAndDownloadRouter
-	AttachmentCategoryRouter
 }
 
 var (
 	exaFileUploadAndDownloadApi = api.ApiGroupApp.ExampleApiGroup.FileUploadAndDownloadApi
-	attachmentCategoryApi       = api.ApiGroupApp.ExampleApiGroup.AttachmentCategoryApi
 )

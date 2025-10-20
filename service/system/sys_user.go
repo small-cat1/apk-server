@@ -25,6 +25,16 @@ type UserService struct{}
 
 var UserServiceApp = new(UserService)
 
+func (userService *UserService) BindGoogleAuth(uuid uuid.UUID, SecretKey string) error {
+	return global.GVA_DB.Model(&system.SysUser{}).
+		Where("uuid = ?", uuid).
+		Updates(map[string]interface{}{
+			"updated_at":         time.Now(),
+			"google_auth_key":    SecretKey,
+			"google_auth_status": 1,
+		}).Error
+}
+
 func (userService *UserService) Register(u system.SysUser) (userInter system.SysUser, err error) {
 	var user system.SysUser
 	if !errors.Is(global.GVA_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册

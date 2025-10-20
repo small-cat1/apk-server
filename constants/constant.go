@@ -1,5 +1,10 @@
 package constants
 
+const (
+	SystemName         = "ApkAdmin"            //ApkAdmin
+	GoogleVerifyAction = "view-wallet-address" // 谷歌验证器操作
+)
+
 // PlanType 套餐类型枚举
 type PlanType string
 

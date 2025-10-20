@@ -12,6 +12,7 @@ type ApiGroup struct {
 	MembershipPlansApi
 	PaymentApi
 	SystemAnnouncementApi
+	CommissionTierApi
 }
 
 var (
@@ -24,4 +25,6 @@ var (
 	membershipPlanService     = service.ServiceGroupApp.ProjectServiceGroup.MembershipPlanService
 	paymentProviderService    = service.ServiceGroupApp.ProjectServiceGroup.PaymentProviderService
 	systemAnnouncementService = service.ServiceGroupApp.ProjectServiceGroup.SystemAnnouncementService
+	commissionTierService     = service.ServiceGroupApp.ProjectServiceGroup.CommissionTierService
+	systemConfigService       = service.ServiceGroupApp.ProjectServiceGroup.SystemConfigService
 )

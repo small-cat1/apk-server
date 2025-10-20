@@ -15,11 +15,15 @@ type SystemConfigService struct{}
 // GetConfig 获取指定scope的配置
 func (s *SystemConfigService) GetConfig(scope string) (map[string]interface{}, error) {
 	var configs []project.SystemConfig
-	db := global.GVA_DB.Where("scope = ?", scope)
-	if scope == "website" {
-		db = db.Where("key != ?", "ios_account")
-	}
+
 	// 查询指定scope的所有配置
+	db := global.GVA_DB.Where("scope = ?", scope)
+
+	// 特殊处理：website scope 排除 ios_account
+	if scope == "website" {
+		db = db.Where("`key` != ?", "ios_account")
+	}
+
 	err := db.Find(&configs).Error
 	if err != nil {
 		return nil, fmt.Errorf("failed to get config: %w", err)
@@ -51,12 +55,14 @@ func (s *SystemConfigService) SetConfig(scope string, config map[string]interfac
 	// 开启事务
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		now := time.Now()
+
 		for key, value := range config {
 			// 将值序列化为JSON
 			valueJSON, err := json.Marshal(value)
 			if err != nil {
 				return fmt.Errorf("failed to marshal value for key %s: %w", key, err)
 			}
+
 			// 查询是否存在该配置
 			var existingConfig project.SystemConfig
 			err = tx.Where("scope = ? AND `key` = ?", scope, key).First(&existingConfig).Error
@@ -94,7 +100,6 @@ func (s *SystemConfigService) SetConfig(scope string, config map[string]interfac
 // GetConfigByKey 获取指定scope和key的配置值
 func (s *SystemConfigService) GetConfigByKey(scope, key string) (interface{}, error) {
 	var config project.SystemConfig
-
 	if err := global.GVA_DB.Where("scope = ? AND `key` = ?", scope, key).First(&config).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, fmt.Errorf("config not found for scope: %s, key: %s", scope, key)
@@ -195,7 +200,7 @@ func (s *SystemConfigService) BatchSetConfig(configs map[string]map[string]inter
 
 // generateConfigName 生成配置名称
 func (s *SystemConfigService) generateConfigName(scope, key string) string {
-	// 可以根据key生成友好的名称
+	// 根据key生成友好的名称
 	nameMap := map[string]map[string]string{
 		"website": {
 			"website_name":        "站点名称",
@@ -210,26 +215,32 @@ func (s *SystemConfigService) generateConfigName(scope, key string) string {
 			"ios_account":         "IOS账号配置",
 		},
 		"service": {
+			"enabled":       "客服开关",
 			"qq":            "QQ客服",
 			"wechat":        "微信客服",
 			"wechat_qrcode": "微信二维码",
 			"phone":         "电话客服",
 			"email":         "邮箱客服",
-			"im_link":       "在线客服",
+			"im_switch":     "第三方IM开关",
+			"im_type":       "IM类型",
+			"im_link":       "在线客服链接",
 			"work_time":     "工作时间",
+			"notice":        "客服通知",
 		},
-		"pay": {
-			"pay_switch":         "支付开关",
-			"wechat_pay_enabled": "微信支付",
-			"alipay_enabled":     "支付宝支付",
-			"pay_callback_url":   "支付回调地址",
+		"commission": {
+			"minWithdraw":         "最低提现金额",
+			"maxWithdraw":         "单次最高提现金额",
+			"dailyWithdrawCount":  "每日提现次数",
+			"settlementCycle":     "结算周期",
+			"withdrawFee":         "提现手续费",
+			"withdrawProcessDays": "提现到账时间",
 		},
 		"seo": {
 			"seo_title":        "SEO标题",
 			"seo_description":  "SEO描述",
 			"seo_keywords":     "SEO关键词",
-			"baidu_analytics":  "百度统计",
-			"google_analytics": "Google Analytics",
+			"baidu_analytics":  "百度统计代码",
+			"google_analytics": "Google Analytics ID",
 		},
 	}
 
@@ -242,24 +253,16 @@ func (s *SystemConfigService) generateConfigName(scope, key string) string {
 	return key
 }
 
-// RefreshCache 刷新配置缓存（如果使用了缓存）
-func (s *SystemConfigService) RefreshCache(scope string) error {
-	// 如果使用了Redis等缓存，在这里实现缓存刷新逻辑
-	// 例如：
-	// cacheKey := fmt.Sprintf("system_config:%s", scope)
-	// return global.Redis.Del(cacheKey).Err()
-	return nil
-}
-
 // ValidateConfig 验证配置的完整性
 func (s *SystemConfigService) ValidateConfig(scope string, config map[string]interface{}) error {
 	// 根据scope验证必填项
 	requiredFields := map[string][]string{
-		"website": {"website_name"},
-		"service": {},
-		"pay":     {},
-		"seo":     {},
+		"website":    {"website_name"},
+		"service":    {},
+		"commission": {"minWithdraw", "maxWithdraw", "dailyWithdrawCount", "settlementCycle", "withdrawProcessDays"},
+		"seo":        {},
 	}
+
 	if fields, ok := requiredFields[scope]; ok {
 		for _, field := range fields {
 			if _, exists := config[field]; !exists {
@@ -268,5 +271,14 @@ func (s *SystemConfigService) ValidateConfig(scope string, config map[string]int
 		}
 	}
 
+	return nil
+}
+
+// RefreshCache 刷新配置缓存（如果使用了缓存）
+func (s *SystemConfigService) RefreshCache(scope string) error {
+	// 如果使用了Redis等缓存，在这里实现缓存刷新逻辑
+	// 例如：
+	// cacheKey := fmt.Sprintf("system_config:%s", scope)
+	// return global.Redis.Del(cacheKey).Err()
 	return nil
 }

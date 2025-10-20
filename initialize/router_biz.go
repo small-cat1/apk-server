@@ -39,6 +39,7 @@ func initWebRouter(engine *gin.Engine) {
 		webRouter.InitOrderRouter(PrivateGroup)
 		webRouter.InitMembershipPlansRoute(PrivateGroup)
 		webRouter.InitPaymentRouter(PrivateGroup)
+		webRouter.InitCommissionTier(PrivateGroup)
 	}
 
 }

@@ -15,6 +15,7 @@ type RouterGroup struct {
 	WebsiteConfigRouter
 	AppAccountRouter
 	SystemAnnouncementRouter
+	CommissionTierRouter
 }
 
 var (
@@ -30,4 +31,5 @@ var (
 	websiteConfigApi      = api.ApiGroupApp.ProjectApiGroup.WebsiteConfigApi
 	appAccountApi         = api.ApiGroupApp.ProjectApiGroup.AppAccountApi
 	systemAnnouncementApi = api.ApiGroupApp.ProjectApiGroup.SystemAnnouncementApi
+	commissionTierApi     = api.ApiGroupApp.ProjectApiGroup.CommissionTierApi
 )

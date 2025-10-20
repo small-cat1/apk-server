@@ -85,9 +85,9 @@ func Routers() *gin.Engine {
 		systemRouter.InitSysOperationRecordRouter(PrivateGroup)  // 操作记录
 		systemRouter.InitSysDictionaryDetailRouter(PrivateGroup) // 字典详情管理
 		systemRouter.InitAuthorityBtnRouterRouter(PrivateGroup)  // 按钮权限管理
+		systemRouter.InitGoogleAuthRouter(PrivateGroup)          //谷歌验证器
 		//例子路由
-		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup)    // 文件上传下载功能路由
-		exampleRouter.InitAttachmentCategoryRouterRouter(PrivateGroup) // 文件上传下载分类
+		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
 
 		// 项目路由
 		projectRouter.InitMembershipPlanRouter(PrivateGroup)       // 会员套餐路由
@@ -102,6 +102,7 @@ func Routers() *gin.Engine {
 		projectRouter.InitWebsiteConfigRouter(PrivateGroup)        // 站点配置路由
 		projectRouter.InitAppAccountRouter(PrivateGroup)           // 应用账号路由
 		projectRouter.InitSystemAnnouncementRouter(PrivateGroup)   // 公告路由
+		projectRouter.InitCommissionTierRouter(PrivateGroup)       // 分佣规则路由
 
 	}
 

@@ -15,4 +15,5 @@ type ServiceGroup struct {
 	SystemConfigService
 	UserMembershipService
 	SystemAnnouncementService
+	CommissionTierService
 }
