@@ -34,7 +34,7 @@ func Reload() error {
 
 	if global.GVA_DB != nil {
 		// 确保数据库表结构是最新的
-		RegisterTables()
+		//RegisterTables()
 	}
 
 	// 重新初始化定时任务
