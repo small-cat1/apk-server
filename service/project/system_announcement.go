@@ -4,13 +4,45 @@ import (
 	"ApkAdmin/global"
 	"ApkAdmin/model/project"
 	"ApkAdmin/model/project/request"
+	"ApkAdmin/model/project/response"
+	"errors"
 	"fmt"
 	"gorm.io/gorm"
+	"time"
 )
 
 type SystemAnnouncementService struct {
 }
 
+// MarkAsRead 标记公告为已读（使用 ON DUPLICATE KEY UPDATE）
+func (s *SystemAnnouncementService) MarkAsRead(userID int64, announcementID int64) error {
+	// 1. 检查公告是否存在
+	var count int64
+	if err := global.GVA_DB.Model(&project.SystemAnnouncement{}).
+		Where("id = ? AND status = 1", announcementID).
+		Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		return errors.New("公告不存在或已下线")
+	}
+
+	// 2. 使用原生 SQL 执行 UPSERT
+	now := time.Now()
+	sql := `
+        INSERT INTO user_announcement_reads 
+            (user_id, announcement_id, is_read, read_time, created_at) 
+        VALUES 
+            (?, ?, 1, ?, ?)
+        ON DUPLICATE KEY UPDATE 
+            is_read = 1,
+            read_time = ?
+    `
+
+	return global.GVA_DB.Exec(sql, userID, announcementID, now, now, now).Error
+}
+
+// GetAnnouncement 获取公告详情
 func (s *SystemAnnouncementService) GetAnnouncement(conditions ...func(*gorm.DB) *gorm.DB) (res *project.SystemAnnouncement, err error) {
 	query := global.GVA_DB.Model(&project.SystemAnnouncement{})
 	// 应用所有条件
@@ -36,20 +68,41 @@ func (s SystemAnnouncementService) ListAnnouncement(info request.ListAnnouncemen
 	return list, total, err
 }
 
-func (s SystemAnnouncementService) PageInfoAnnouncement(info request.ListAnnouncementRequest) (list []project.SystemAnnouncement, total int64, err error) {
+func (s SystemAnnouncementService) PageInfoAnnouncement(info request.ListAnnouncementRequest, userID uint) (list []response.AnnouncementWithReadStatus, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := global.GVA_DB.Debug().Model(&project.SystemAnnouncement{}).Where("status = ?", 1)
+
+	// 先统计总数
+	countDB := global.GVA_DB.Model(&project.SystemAnnouncement{}).Where("status = ?", 1)
 	if info.Type == 1 || info.Type == 2 || info.Type == 3 {
-		db.Where("type = ?", info.Type)
+		countDB.Where("type = ?", info.Type)
 	}
-	// 获取总数
-	err = db.Count(&total).Error
+	err = countDB.Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
-	// 分页查询
-	err = db.Order("created_at desc").Limit(limit).Offset(offset).Find(&list).Error
+
+	// LEFT JOIN 查询公告和阅读状态
+	db := global.GVA_DB.
+		Table("system_announcements sa").
+		Select(`
+            sa.*,
+            COALESCE(uar.is_read, 0) as is_read,
+            uar.read_time,
+            COALESCE(uar.is_closed, 0) as is_closed
+        `).
+		Joins("LEFT JOIN user_announcement_reads uar ON sa.id = uar.announcement_id AND uar.user_id = ?", userID).
+		Where("sa.status = ?", 1)
+
+	if info.Type == 1 || info.Type == 2 || info.Type == 3 {
+		db.Where("sa.type = ?", info.Type)
+	}
+
+	err = db.Order("sa.created_at desc").
+		Limit(limit).
+		Offset(offset).
+		Scan(&list).Error
+
 	return list, total, err
 }
 

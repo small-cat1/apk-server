@@ -21,7 +21,7 @@ func (r *MembershipOrderRefundService) RefundMembershipOrder(req projectReq.Refu
 	}
 
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err := global.GVA_DB.Where("id = ?", req.ID).First(&order).Error
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (r *MembershipOrderRefundService) RefundMembershipOrder(req projectReq.Refu
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		// 创建退款记录
 		refund := project.MembershipOrderRefund{
-			OrderID:      order.ID,
+			OrderID:      uint(order.ID),
 			OrderNo:      order.OrderNo,
 			RefundAmount: refundAmount,
 			RefundReason: req.RefundReason,
@@ -95,7 +95,7 @@ func (r *MembershipOrderRefundService) RefundMembershipOrder(req projectReq.Refu
 // GetRefundDetail 获取退款详情
 func (r *MembershipOrderRefundService) GetRefundDetail(req projectReq.RefundDetailReq) (detail projectReq.RefundDetailResp, err error) {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err = global.GVA_DB.Where("id = ?", req.OrderID).First(&order).Error
 	if err != nil {
 		return
@@ -236,7 +236,7 @@ func (r *MembershipOrderRefundService) CancelRefund(refundID uint, reason string
 		}
 
 		// 恢复订单状态为已支付
-		return tx.Model(&project.MembershipOrder{}).
+		return tx.Model(&project.Order{}).
 			Where("id = ?", refund.OrderID).
 			Update("status", "paid").Error
 	})

@@ -173,6 +173,7 @@ func (u *UserService) GetUserDetail(conditions ...func(*gorm.DB) *gorm.DB) (user
 		query = condition(query)
 	}
 	err = query.Preload("Statistics").
+		Preload("CommissionSimple").
 		Preload("Memberships", func(db *gorm.DB) *gorm.DB {
 			return db.Order("created_at DESC")
 		}).
@@ -188,8 +189,8 @@ func (u *UserService) RegisterUser(req request.BaseRegisterRequest, clientIP str
 	referrerID = 0
 	if req.InviteCode != "" {
 		var referrerUser project.User
-		_ = global.GVA_DB.Model(&project.User{}).First(&referrerUser).Error
-		if referrerUser.ID > 0 {
+		err := global.GVA_DB.Model(&project.User{}).First(&referrerUser).Error
+		if err == nil && referrerUser.ID > 0 {
 			referrerID = referrerUser.ID
 		}
 	}
@@ -219,118 +220,72 @@ func (u *UserService) RegisterUser(req request.BaseRegisterRequest, clientIP str
 
 	// 开启事务
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		// 创建用户
+		// 1. 创建用户
 		if err := tx.Create(&user).Error; err != nil {
 			return err
 		}
-		// 创建用户统计记录
+
+		// 2. 创建用户统计记录
 		statistics := project.UserStatistics{
 			UserID: user.ID,
 		}
 		if err := tx.Create(&statistics).Error; err != nil {
 			return err
 		}
-		return nil
-	})
-}
 
-// CreateUser 创建用户
-func (u *UserService) CreateUser(req request.CreateUserRequest) error {
-	var count int64
-	// 检查邮箱是否已存在
-	global.GVA_DB.Model(&project.User{}).Where("email = ?", req.Email).Count(&count)
-	if count > 0 {
-		return errors.New("邮箱已存在")
-	}
-
-	// 检查手机号是否已存在
-	if req.Phone != "" {
-		global.GVA_DB.Model(&project.User{}).Where("phone = ?", req.Phone).Count(&count)
-		if count > 0 {
-			return errors.New("手机号已存在")
+		// 3. ✅ 创建团队统计记录
+		teamStats := project.TeamStatistics{
+			UserID: int64(user.ID),
 		}
-	}
-	passwordHash := utils.BcryptHash(req.Password)
-	// 处理日期
-	ReferralCode, err := u.generateReferralCode()
-	if err != nil {
-		return errors.New("生成邀请码失败")
-	}
-	// 创建用户
-	// 创建用户
-	manager := utils.NewUsernameGeneratorManager()
-	// 随机生成任意风格
-	username, _ := manager.GenerateRandom()
-	user := project.User{
-		UUID:          uuid.New(),
-		Username:      username,
-		Email:         req.Email,
-		PasswordHash:  passwordHash,
-		AccountStatus: constants.AccountStatusNormal,
-		EmailVerified: req.EmailVerified,
-		PhoneVerified: req.PhoneVerified,
-		ReferralCode:  &ReferralCode,
-	}
-
-	if req.Phone != "" {
-		user.Phone = &req.Phone
-	}
-
-	// 开启事务
-	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		// 创建用户
-		if err := tx.Create(&user).Error; err != nil {
+		if err := tx.Create(&teamStats).Error; err != nil {
 			return err
 		}
-		// 创建用户统计记录
-		statistics := project.UserStatistics{
+		// 4. ✅ 创建佣金账户记录（新增）
+		commissionAccount := project.UserCommissionAccount{
 			UserID: user.ID,
 		}
-		if err := tx.Create(&statistics).Error; err != nil {
+		if err := tx.Create(&commissionAccount).Error; err != nil {
 			return err
+		}
+		// 5. 如果有推荐人，更新推荐人的统计
+		if referrerID > 0 {
+			// 确保推荐人的统计记录存在
+			var count int64
+
+			// 检查 user_statistics
+			tx.Model(&project.UserStatistics{}).Where("user_id = ?", referrerID).Count(&count)
+			if count == 0 {
+				refStats := project.UserStatistics{UserID: referrerID}
+				tx.Create(&refStats)
+			}
+
+			// 检查 team_statistics
+			tx.Model(&project.TeamStatistics{}).Where("user_id = ?", referrerID).Count(&count)
+			if count == 0 {
+				refTeamStats := project.TeamStatistics{UserID: int64(referrerID)}
+				tx.Create(&refTeamStats)
+			}
+
+			// ✅ 更新 user_statistics
+			if err := tx.Model(&project.UserStatistics{}).
+				Where("user_id = ?", referrerID).
+				UpdateColumn("successful_referrals", gorm.Expr("successful_referrals + 1")).
+				Error; err != nil {
+				return err
+			}
+
+			// ✅ 更新 team_statistics
+			if err := tx.Model(&project.TeamStatistics{}).
+				Where("user_id = ?", referrerID).
+				Updates(map[string]interface{}{
+					"total_members": gorm.Expr("total_members + 1"),
+					"today_new":     gorm.Expr("today_new + 1"),
+				}).Error; err != nil {
+				return err
+			}
 		}
 		return nil
 	})
-}
-
-// UpdateUser 更新用户
-func (u *UserService) UpdateUser(req request.UpdateUserRequest) error {
-	// 检查用户是否存在
-	var existingUser project.User
-	if err := global.GVA_DB.First(&existingUser, req.ID).Error; err != nil {
-		return errors.New("用户不存在")
-	}
-
-	var count int64
-
-	// 检查邮箱重复（排除自己）
-	global.GVA_DB.Model(&project.User{}).Where("email = ? AND id != ?", req.Email, req.ID).Count(&count)
-	if count > 0 {
-		return errors.New("邮箱已存在")
-	}
-
-	// 检查手机号重复（排除自己）
-	if req.Phone != "" {
-		global.GVA_DB.Model(&project.User{}).Where("phone = ? AND id != ?", req.Phone, req.ID).Count(&count)
-		if count > 0 {
-			return errors.New("手机号已存在")
-		}
-	}
-	// 更新数据
-	updates := map[string]interface{}{
-		"email":          req.Email,
-		"account_status": req.AccountStatus,
-		"email_verified": req.EmailVerified,
-		"phone_verified": req.PhoneVerified,
-	}
-	if req.Phone != "" {
-		updates["phone"] = req.Phone
-	} else {
-		updates["phone"] = nil
-		updates["phone_verified"] = false
-	}
-
-	return global.GVA_DB.Model(&existingUser).Updates(updates).Error
 }
 
 // DeleteUser 删除用户
@@ -344,13 +299,6 @@ func (u *UserService) DeleteUser(id uint) error {
 		// 这里选择保留会员记录和订单记录
 
 		return nil
-	})
-}
-
-// BatchDeleteUsers 批量删除用户
-func (u *UserService) BatchDeleteUsers(ids []uint) error {
-	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		return tx.Delete(&project.User{}, ids).Error
 	})
 }
 
@@ -397,23 +345,25 @@ func (u *UserService) ChangeUserPassword(id uint, req request.ChangeUserPassword
 	return err
 }
 
+// ApplyWithdraw 用户提现申请
+func (u *UserService) ApplyWithdraw(id uint, req request.UserWithdrawRequest) error {
+
+	return nil
+}
+
 // generateReferralCode 生成推荐码
 func (u *UserService) generateReferralCode() (string, error) {
 	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	const length = 8
-
 	result := make([]byte, length)
 	randomBytes := make([]byte, length)
-
 	// 使用密码学安全的随机数生成器
 	if _, err := rand.Read(randomBytes); err != nil {
 		return "", err
 	}
-
 	for i := 0; i < length; i++ {
 		result[i] = chars[randomBytes[i]%byte(len(chars))]
 	}
-
 	return string(result), nil
 }
 
@@ -426,7 +376,6 @@ func (u *UserService) generateUniqueReferralCode() (string, error) {
 		if err != nil {
 			return "", err
 		}
-
 		// 检查数据库中是否已存在
 		var count int64
 		if err := global.GVA_DB.Model(&project.User{}).
@@ -439,7 +388,6 @@ func (u *UserService) generateUniqueReferralCode() (string, error) {
 			return code, nil
 		}
 	}
-
 	return "", errors.New("无法生成唯一推荐码，请重试")
 }
 
@@ -455,12 +403,11 @@ func (u *UserService) GetUserMemberships(userID uint) ([]project.UserMembership,
 }
 
 // GetUserOrders 获取用户订单记录
-func (u *UserService) GetUserOrders(userID uint) ([]project.MembershipOrder, error) {
-	var orders []project.MembershipOrder
+func (u *UserService) GetUserOrders(userID uint) ([]project.Order, error) {
+	var orders []project.Order
 	err := global.GVA_DB.Where("user_id = ?", userID).
 		Order("created_at DESC").
 		Find(&orders).Error
-
 	return orders, err
 }
 

@@ -28,9 +28,9 @@ type UserMembership struct {
 	UpdatedAt           time.Time                  `json:"updated_at" gorm:"comment:更新时间"`
 
 	// 关联关系
-	Plan             *MembershipPlan  `json:"plan,omitempty" gorm:"foreignKey:PlanID"`
-	Order            *MembershipOrder `json:"order,omitempty" gorm:"foreignKey:OrderID"`
-	ReplacedByRecord *UserMembership  `json:"replaced_by_record,omitempty" gorm:"foreignKey:ReplacedBy"`
+	Plan             *MembershipPlan `json:"plan,omitempty" gorm:"foreignKey:PlanID"`
+	Order            *Order          `json:"order,omitempty" gorm:"foreignKey:OrderID"`
+	ReplacedByRecord *UserMembership `json:"replaced_by_record,omitempty" gorm:"foreignKey:ReplacedBy"`
 }
 
 // TableName 指定表名

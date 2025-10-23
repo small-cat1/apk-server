@@ -231,6 +231,7 @@ func (s *SystemConfigService) generateConfigName(scope, key string) string {
 			"minWithdraw":         "最低提现金额",
 			"maxWithdraw":         "单次最高提现金额",
 			"dailyWithdrawCount":  "每日提现次数",
+			"withdrawMethods":     "提现方式",
 			"settlementCycle":     "结算周期",
 			"withdrawFee":         "提现手续费",
 			"withdrawProcessDays": "提现到账时间",

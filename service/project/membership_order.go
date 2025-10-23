@@ -15,12 +15,12 @@ type MembershipOrderService struct {
 }
 
 // GetMembershipOrderInfoList 分页获取会员订单列表
-func (m *MembershipOrderService) GetMembershipOrderInfoList(req projectReq.MembershipOrderSearchRequest) (list []project.MembershipOrder, total int64, err error) {
+func (m *MembershipOrderService) GetMembershipOrderInfoList(req projectReq.MembershipOrderSearchRequest) (list []project.Order, total int64, err error) {
 	limit := req.PageSize
 	offset := req.PageSize * (req.Page - 1)
 
 	// 构建查询
-	db := global.GVA_DB.Model(&project.MembershipOrder{})
+	db := global.GVA_DB.Model(&project.Order{})
 
 	// 添加搜索条件
 	db = m.buildSearchConditions(db, req)
@@ -89,20 +89,20 @@ func (m *MembershipOrderService) buildSearchConditions(db *gorm.DB, req projectR
 }
 
 // GetMembershipOrder 根据ID查询会员订单
-func (m *MembershipOrderService) GetMembershipOrder(id uint) (membershipOrder project.MembershipOrder, err error) {
+func (m *MembershipOrderService) GetMembershipOrder(id int) (membershipOrder project.Order, err error) {
 	err = global.GVA_DB.Where("id = ?", id).First(&membershipOrder).Error
 	return
 }
 
 // GetMembershipOrderByOrderNo 根据订单号查询会员订单
-func (m *MembershipOrderService) GetMembershipOrderByOrderNo(orderNo string) (membershipOrder project.MembershipOrder, err error) {
+func (m *MembershipOrderService) GetMembershipOrderByOrderNo(orderNo string) (membershipOrder project.Order, err error) {
 	err = global.GVA_DB.Where("order_no = ?", orderNo).First(&membershipOrder).Error
 	return
 }
 
 // UpdateMembershipOrderRemark 更新会员订单备注/标记
 func (m *MembershipOrderService) UpdateMembershipOrderRemark(req projectReq.UpdateOrderRemarkReq) error {
-	return global.GVA_DB.Model(&project.MembershipOrder{}).
+	return global.GVA_DB.Model(&project.Order{}).
 		Where("id = ?", req.ID).
 		Update("remark", req.Remark).Error
 }
@@ -110,7 +110,7 @@ func (m *MembershipOrderService) UpdateMembershipOrderRemark(req projectReq.Upda
 // CancelMembershipOrder 取消会员订单
 func (m *MembershipOrderService) CancelMembershipOrder(req projectReq.CancelOrderReq) error {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err := global.GVA_DB.Where("id = ?", req.ID).First(&order).Error
 	if err != nil {
 		return err
@@ -134,7 +134,7 @@ func (m *MembershipOrderService) BatchCancelMembershipOrders(ids []int) error {
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
 		// 检查所有订单状态
 		var count int64
-		err := tx.Model(&project.MembershipOrder{}).
+		err := tx.Model(&project.Order{}).
 			Where("id IN ? AND status = ?", ids, "pending").
 			Count(&count).Error
 		if err != nil {
@@ -146,7 +146,7 @@ func (m *MembershipOrderService) BatchCancelMembershipOrders(ids []int) error {
 		}
 
 		// 批量更新状态
-		return tx.Model(&project.MembershipOrder{}).
+		return tx.Model(&project.Order{}).
 			Where("id IN ?", ids).
 			Updates(map[string]interface{}{
 				"status":     "cancelled",
@@ -163,7 +163,7 @@ func (m *MembershipOrderService) ConfirmPayment(req projectReq.ConfirmPaymentReq
 	}
 
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err := global.GVA_DB.Where("id = ?", req.ID).First(&order).Error
 	if err != nil {
 		return err
@@ -202,7 +202,7 @@ func (m *MembershipOrderService) HandlePaymentCallback(req projectReq.PaymentCal
 	}
 
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err := global.GVA_DB.Where("order_no = ?", req.OrderNo).First(&order).Error
 	if err != nil {
 		return err
@@ -239,7 +239,7 @@ func (m *MembershipOrderService) HandlePaymentCallback(req projectReq.PaymentCal
 
 // GetOrderStats 获取订单统计信息
 func (m *MembershipOrderService) GetOrderStats(req projectReq.OrderStatsReq) (stats projectReq.OrderStatsResp, err error) {
-	db := global.GVA_DB.Model(&project.MembershipOrder{})
+	db := global.GVA_DB.Model(&project.Order{})
 
 	// 添加时间范围过滤
 	if !req.StartDate.IsZero() && !req.EndDate.IsZero() {
@@ -294,7 +294,7 @@ func (m *MembershipOrderService) GetOrderStats(req projectReq.OrderStatsReq) (st
 	todayStart := today + " 00:00:00"
 	todayEnd := today + " 23:59:59"
 
-	todayDB := global.GVA_DB.Model(&project.MembershipOrder{}).
+	todayDB := global.GVA_DB.Model(&project.Order{}).
 		Where("created_at BETWEEN ? AND ?", todayStart, todayEnd)
 
 	if req.Platform != "" {
@@ -317,11 +317,11 @@ func (m *MembershipOrderService) GetOrderStats(req projectReq.OrderStatsReq) (st
 }
 
 // GetUserOrderHistory 获取用户订单历史
-func (m *MembershipOrderService) GetUserOrderHistory(req projectReq.UserOrderHistoryReq) (history []project.MembershipOrder, total int64, err error) {
+func (m *MembershipOrderService) GetUserOrderHistory(req projectReq.UserOrderHistoryReq) (history []project.Order, total int64, err error) {
 	limit := req.PageSize
 	offset := req.PageSize * (req.Page - 1)
 
-	db := global.GVA_DB.Model(&project.MembershipOrder{}).Where("user_id = ?", req.UserID)
+	db := global.GVA_DB.Model(&project.Order{}).Where("user_id = ?", req.UserID)
 
 	// 添加状态过滤
 	if req.Status != "" {
@@ -342,8 +342,8 @@ func (m *MembershipOrderService) GetUserOrderHistory(req projectReq.UserOrderHis
 // ExportOrders 导出订单数据
 func (m *MembershipOrderService) ExportOrders(req projectReq.ExportOrderReq) (fileData []byte, fileName string, err error) {
 	// 查询数据
-	var orders []project.MembershipOrder
-	db := global.GVA_DB.Model(&project.MembershipOrder{})
+	var orders []project.Order
+	db := global.GVA_DB.Model(&project.Order{})
 
 	// 添加过滤条件
 	if !req.StartDate.IsZero() && !req.EndDate.IsZero() {
@@ -368,7 +368,7 @@ func (m *MembershipOrderService) ExportOrders(req projectReq.ExportOrderReq) (fi
 // ValidateOrder 验证订单有效性
 func (m *MembershipOrderService) ValidateOrder(req projectReq.ValidateOrderReq) (result projectReq.ValidateOrderResp, err error) {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err = global.GVA_DB.Where("order_no = ?", req.OrderNo).First(&order).Error
 	if err != nil {
 		result.IsValid = false
@@ -384,7 +384,7 @@ func (m *MembershipOrderService) ValidateOrder(req projectReq.ValidateOrderReq) 
 	}
 
 	// 检查订单是否过期
-	if time.Now().After(order.ExpiresAt) {
+	if time.Now().After(order.ExpiredAt) {
 		result.IsValid = false
 		result.Message = "订单已过期"
 		return result, nil
@@ -432,7 +432,7 @@ func (m *MembershipOrderService) GetOrderLogs(req projectReq.OrderLogReq) (logs 
 // ManualProcessOrder 手动处理异常订单
 func (m *MembershipOrderService) ManualProcessOrder(req projectReq.ManualProcessOrderReq) error {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err := global.GVA_DB.Where("id = ?", req.OrderID).First(&order).Error
 	if err != nil {
 		return err
@@ -464,7 +464,7 @@ func (m *MembershipOrderService) ManualProcessOrder(req projectReq.ManualProcess
 // SyncPaymentStatus 查询第三方支付状态
 func (m *MembershipOrderService) SyncPaymentStatus(req projectReq.QueryPaymentStatusReq) (result projectReq.PaymentStatusResp, err error) {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err = global.GVA_DB.Where("order_no = ?", req.OrderNo).First(&order).Error
 	if err != nil {
 		return
@@ -488,7 +488,7 @@ func (m *MembershipOrderService) SyncPaymentStatus(req projectReq.QueryPaymentSt
 // GetOrderReceipt 获取订单收据
 func (m *MembershipOrderService) GetOrderReceipt(req projectReq.OrderReceiptReq) (receipt projectReq.OrderReceiptResp, err error) {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err = global.GVA_DB.Where("id = ?", req.OrderID).First(&order).Error
 	if err != nil {
 		return
@@ -501,7 +501,7 @@ func (m *MembershipOrderService) GetOrderReceipt(req projectReq.OrderReceiptReq)
 
 	// 构建收据信息
 	receipt.OrderNo = order.OrderNo
-	receipt.PlanName = order.PlanName
+	receipt.PlanName = order.ProductName
 	receipt.Amount = order.FinalAmount
 	receipt.Currency = order.CurrencyCode
 	receipt.PaymentMethod = *order.PaymentMethod
@@ -514,7 +514,7 @@ func (m *MembershipOrderService) GetOrderReceipt(req projectReq.OrderReceiptReq)
 // SendOrderNotification 发送订单通知
 func (m *MembershipOrderService) SendOrderNotification(req projectReq.SendOrderNotificationReq) error {
 	// 查询订单
-	var order project.MembershipOrder
+	var order project.Order
 	err := global.GVA_DB.Where("id = ?", req.OrderID).First(&order).Error
 	if err != nil {
 		return err
@@ -547,13 +547,13 @@ func (m *MembershipOrderService) validateCallbackSignature(req projectReq.Paymen
 }
 
 // sendEmailNotification 发送邮件通知
-func (m *MembershipOrderService) sendEmailNotification(order project.MembershipOrder, message string) error {
+func (m *MembershipOrderService) sendEmailNotification(order project.Order, message string) error {
 	// TODO: 实现邮件发送
 	return nil
 }
 
 // sendSMSNotification 发送短信通知
-func (m *MembershipOrderService) sendSMSNotification(order project.MembershipOrder, message string) error {
+func (m *MembershipOrderService) sendSMSNotification(order project.Order, message string) error {
 	// TODO: 实现短信发送
 	return nil
 }

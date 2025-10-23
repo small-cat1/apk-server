@@ -67,10 +67,12 @@ type User struct {
 	DeletedAt               *time.Time      `json:"deleted_at" gorm:"comment:软删除时间"`
 
 	// 关联关系
-	Statistics  *UserStatistics  `json:"statistics,omitempty" gorm:"foreignKey:UserID"`
-	Memberships []UserMembership `json:"memberships" gorm:"foreignKey:UserID"`
-	Referrer    *User            `json:"referrer,omitempty" gorm:"foreignKey:ReferrerID"`
-	Referrals   []User           `json:"referrals,omitempty" gorm:"foreignKey:ReferrerID"`
+	Commission       *UserCommissionAccount       `json:"commission,omitempty" gorm:"foreignKey:UserID"`
+	CommissionSimple *UserCommissionAccountSimple `json:"commissionSimple,omitempty" gorm:"foreignKey:UserID"` // 新增
+	Statistics       *UserStatistics              `json:"statistics,omitempty" gorm:"foreignKey:UserID"`
+	Memberships      []UserMembership             `json:"memberships" gorm:"foreignKey:UserID"`
+	Referrer         *User                        `json:"referrer,omitempty" gorm:"foreignKey:ReferrerID"`
+	Referrals        []User                       `json:"referrals,omitempty" gorm:"foreignKey:ReferrerID"`
 }
 
 func (u User) GetUsername() string {

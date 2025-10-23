@@ -55,38 +55,6 @@ func (u *UserApi) GetUser(c *gin.Context) {
 	}
 }
 
-// CreateUser 创建用户
-func (u *UserApi) CreateUser(c *gin.Context) {
-	var req request.CreateUserRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	if err := UserService.CreateUser(req); err != nil {
-		global.GVA_LOG.Error("创建失败!", zap.Error(err))
-		response.FailWithMessage("创建失败: "+err.Error(), c)
-	} else {
-		response.OkWithMessage("创建成功", c)
-	}
-}
-
-// UpdateUser 更新用户
-func (u *UserApi) UpdateUser(c *gin.Context) {
-	var req request.UpdateUserRequest
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-
-	if err := UserService.UpdateUser(req); err != nil {
-		global.GVA_LOG.Error("更新失败!", zap.Error(err))
-		response.FailWithMessage("更新失败: "+err.Error(), c)
-	} else {
-		response.OkWithMessage("更新成功", c)
-	}
-}
-
 // DeleteUser 删除用户
 func (u *UserApi) DeleteUser(c *gin.Context) {
 	var req request.UserRequest
@@ -99,23 +67,6 @@ func (u *UserApi) DeleteUser(c *gin.Context) {
 		response.FailWithMessage("删除失败", c)
 	} else {
 		response.OkWithMessage("删除成功", c)
-	}
-}
-
-// BatchDeleteUsers 批量删除用户
-func (u *UserApi) BatchDeleteUsers(c *gin.Context) {
-	var req request.BatchDeleteUsersRequest
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-
-	if err := UserService.BatchDeleteUsers(req.IDs); err != nil {
-		global.GVA_LOG.Error("批量删除失败!", zap.Error(err))
-		response.FailWithMessage("批量删除失败", c)
-	} else {
-		response.OkWithMessage("批量删除成功", c)
 	}
 }
 

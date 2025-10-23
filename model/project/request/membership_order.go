@@ -106,9 +106,9 @@ type ValidateOrderReq struct {
 
 // ValidateOrderResp 验证订单响应
 type ValidateOrderResp struct {
-	IsValid bool                    `json:"is_valid"` // 是否有效
-	Message string                  `json:"message"`  // 验证信息
-	Order   project.MembershipOrder `json:"order"`    // 订单信息
+	IsValid bool          `json:"is_valid"` // 是否有效
+	Message string        `json:"message"`  // 验证信息
+	Order   project.Order `json:"order"`    // 订单信息
 }
 
 // PaymentMethod 支付方式

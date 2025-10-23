@@ -14,10 +14,7 @@ func (r *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	userRouterWithoutRecord := Router.Group("user")
 	{
 		// 管理员接口（需要认证和权限）
-		userRouter.POST("createUser", userApi.CreateUser)                       // 创建用户
-		userRouter.PUT("updateUser", userApi.UpdateUser)                        // 更新用户
 		userRouter.DELETE("removeUser/:id", userApi.DeleteUser)                 // 删除用户
-		userRouter.POST("batchDeleteUsers", userApi.BatchDeleteUsers)           // 批量删除用户
 		userRouter.POST("batchUpdateUserStatus", userApi.BatchUpdateUserStatus) // 批量更新状态
 		userRouter.POST("resetUserPassword", userApi.ResetUserPassword)         // 重置密码
 	}

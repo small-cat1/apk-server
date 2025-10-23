@@ -23,8 +23,8 @@ type MembershipOrderRefund struct {
 	Metadata           *string    `json:"metadata" gorm:"type:json;comment:额外数据"`
 
 	// 关联查询
-	Order    MembershipOrder `json:"order" gorm:"foreignKey:OrderID;references:ID"`
-	Operator interface{}     `json:"operator" gorm:"-"` // 这里可以关联到用户表
+	Order    Order       `json:"order" gorm:"foreignKey:OrderID;references:ID"`
+	Operator interface{} `json:"operator" gorm:"-"` // 这里可以关联到用户表
 }
 
 func (MembershipOrderRefund) TableName() string {

@@ -113,7 +113,7 @@ func (a *MembershipPlanService) DeleteMembershipPlan(cid int) (err error) {
 	}
 
 	var t1 int64
-	err = global.GVA_DB.Model(&project.MembershipOrder{}).Where("plan_id = ?", cid).Count(&t1).Error
+	err = global.GVA_DB.Model(&project.Order{}).Where("plan_id = ?", cid).Count(&t1).Error
 	if err != nil {
 		return err
 	}

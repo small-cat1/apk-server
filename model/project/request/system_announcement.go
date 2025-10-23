@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+type MarkAnnouncementReadRequest struct {
+	AnnouncementID int64 `json:"announcement_id" binding:"required"`
+}
+
 type ListAnnouncementRequest struct {
 	PageInfo
 	Type int `json:"type" form:"type" `

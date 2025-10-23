@@ -2,6 +2,7 @@ package project
 
 import "time"
 
+// 系统公告表
 type SystemAnnouncement struct {
 	ID          int64      `json:"id" gorm:"primaryKey;autoIncrement;comment:主键ID"`
 	Title       string     `json:"title" gorm:"type:varchar(200);not null;comment:公告标题"`

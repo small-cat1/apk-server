@@ -4,7 +4,6 @@ import (
 	"ApkAdmin/global"
 	"ApkAdmin/model/common/request"
 	"ApkAdmin/model/common/response"
-	"ApkAdmin/model/project"
 	projectReq "ApkAdmin/model/project/request"
 	"ApkAdmin/utils"
 	"github.com/gin-gonic/gin"
@@ -60,22 +59,21 @@ func (m *MembershipOrderApi) GetMembershipOrderList(c *gin.Context) {
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"查询成功"}"
 // @Router /membershipOrder/findMembershipOrder [get]
 func (m *MembershipOrderApi) GetMembershipOrder(c *gin.Context) {
-	var membershipOrder project.MembershipOrder
-	err := c.ShouldBindQuery(&membershipOrder)
+	var info request.GetById
+	err := c.ShouldBindQuery(&info)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	err = utils.Verify(membershipOrder.GVA_MODEL, utils.IdVerify)
+	err = utils.Verify(info, utils.IdVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-
-	reMembershipOrder, err := membershipOrderService.GetMembershipOrder(membershipOrder.ID)
+	reMembershipOrder, err := membershipOrderService.GetMembershipOrder(info.ID)
 	if err != nil {
-		global.GVA_LOG.Error("查询失败!", zap.Error(err))
-		response.FailWithMessage("查询失败", c)
+		global.GVA_LOG.Error("查询会员订单失败!", zap.Error(err))
+		response.FailWithMessage("查询会员订单失败", c)
 		return
 	}
 
