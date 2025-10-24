@@ -6,7 +6,7 @@ import (
 )
 
 // GetFileType 根据文件扩展名判断类型
-func GetFileType(filename string) string {
+func GetFileType(filename string) (string, string) {
 	ext := strings.ToLower(filepath.Ext(filename))
 	imageExts := map[string]bool{
 		".jpg": true, ".jpeg": true, ".png": true, ".gif": true,
@@ -20,13 +20,25 @@ func GetFileType(filename string) string {
 		".pdf": true, ".doc": true, ".docx": true, ".xls": true,
 		".xlsx": true, ".ppt": true, ".pptx": true, ".txt": true,
 	}
+	packageExts := map[string]bool{
+		".apk": true,
+		".ipa": true,
+		".exe": true,
+		".dmg": true,
+		".pkg": true,
+		".zip": true,
+		".rar": true,
+		".7z":  true,
+	}
 	if imageExts[ext] {
-		return "image"
+		return "image", ext
 	} else if videoExts[ext] {
-		return "video"
+		return "video", ext
 	} else if docExts[ext] {
-		return "document"
+		return "document", ext
+	} else if packageExts[ext] {
+		return "package", ext
 	}
 
-	return "file"
+	return "file", ext
 }

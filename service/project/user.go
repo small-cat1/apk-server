@@ -177,6 +177,7 @@ func (u *UserService) GetUserDetail(conditions ...func(*gorm.DB) *gorm.DB) (user
 		Preload("Memberships", func(db *gorm.DB) *gorm.DB {
 			return db.Order("created_at DESC")
 		}).
+		Preload("Memberships.Plan"). // 👈 添加这一行来关联 Plan
 		Preload("Referrer").
 		First(&user).Error
 	return user, err

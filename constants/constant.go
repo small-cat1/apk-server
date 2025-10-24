@@ -38,12 +38,7 @@ const (
 type PackageStatus string
 
 const (
-	StatusDraft         PackageStatus = "draft"
-	StatusTesting       PackageStatus = "testing"
 	StatusReviewPending PackageStatus = "review_pending"
-	StatusApproved      PackageStatus = "approved"
 	StatusPublished     PackageStatus = "published"
 	StatusRejected      PackageStatus = "rejected"
-	StatusSuspended     PackageStatus = "suspended"
-	StatusArchived      PackageStatus = "archived"
 )

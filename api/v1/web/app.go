@@ -9,11 +9,15 @@ import (
 	projectRes "ApkAdmin/model/project/response"
 	"ApkAdmin/service/project"
 	"ApkAdmin/utils"
+	"ApkAdmin/utils/upload"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -181,9 +185,17 @@ func (a AppApi) checkUserPermission(c *gin.Context, platform constants.Platform,
 
 	// 未付费用户
 	if len(userDetail.Memberships) == 0 {
+		//url, err := a.GenerateApkDownloadUrl(
+		//	"private/package/2025-10-23/Google Chrome_141.0.7390.43_APKPure.apk",
+		//	"Google Chrome_141.0.7390.43_APKPure.apk",
+		//	300,
+		//)
+		//if err != nil {
+		//	return nil, err
+		//}
 		//return &projectRes.DownloadResp{
 		//	CanDownload: true,
-		//	PackageUrl:  "http://www.baidu.com",
+		//	PackageUrl:  url,
 		//	//PackageDetail:  "账号georgdowbigginpksu4417@gmail.com密码Aa2501d 密保答案：mm55----mm----mm77----1990年1月1日",
 		//	PackageDetail:  "测试test@gmail.com密码Aa123456",
 		//	DownloadReason: "success",
@@ -230,28 +242,133 @@ func (a AppApi) validateUserMembership(memberships []projectModel.UserMembership
 }
 
 // buildDownloadResp 构建下载响应
-func (a AppApi) buildDownloadResp(isVip, canDownload bool, platform constants.Platform, appPackage *projectModel.AppPackage, reason string) *projectRes.DownloadResp {
+func (a *AppApi) buildDownloadResp(
+	isVip bool,
+	canDownload bool,
+	platform constants.Platform,
+	appPackage *projectModel.AppPackage,
+	reason string,
+) *projectRes.DownloadResp {
 	resp := &projectRes.DownloadResp{
 		CanDownload:    canDownload,
 		DownloadReason: reason,
 	}
+
+	// 不允许下载时直接返回
 	if !canDownload {
 		return resp
 	}
-	// 根据平台类型设置不同的返回字段
-	if platform == constants.PlatformIOS {
-		if isVip {
-			resp.PackageUrl = *appPackage.FileURL
-		} else {
-			resp.PackageDetail = a.getFreeIOSAccount()
+
+	// 根据平台处理
+	switch platform {
+	case constants.PlatformIOS:
+		a.handleIOSDownload(resp, isVip, appPackage)
+	case constants.PlatformAndroid:
+		a.handleAndroidDownload(resp, appPackage)
+	}
+
+	return resp
+}
+
+// handleIOSDownload 处理iOS下载
+func (a *AppApi) handleIOSDownload(resp *projectRes.DownloadResp, isVip bool, appPackage *projectModel.AppPackage) {
+	if isVip {
+		// VIP用户：生成下载链接
+		if url, err := a.getPackageUrl(appPackage); err == nil {
+			resp.PackageUrl = url
 		}
 	} else {
-		// Android 返回直接下载链接
-		if appPackage.FileURL != nil {
-			resp.PackageUrl = *appPackage.FileURL
-		}
+		// 非VIP用户：返回免费账号
+		resp.PackageDetail = a.getFreeIOSAccount()
 	}
-	return resp
+}
+
+// handleAndroidDownload 处理Android下载
+func (a *AppApi) handleAndroidDownload(resp *projectRes.DownloadResp, appPackage *projectModel.AppPackage) {
+	if url, err := a.getPackageUrl(appPackage); err == nil {
+		resp.PackageUrl = url
+	}
+}
+
+// getPackageUrl 获取安装包下载URL（核心方法）
+func (a *AppApi) getPackageUrl(appPackage *projectModel.AppPackage) (string, error) {
+	// 1. 空值检查
+	if appPackage == nil {
+		return "", errors.New("安装包信息为空")
+	}
+
+	// 2. 根据OSS类型处理
+	switch global.GVA_CONFIG.System.OssType {
+	case "aliyun-oss":
+		return a.getAliyunOssUrl(appPackage)
+	default:
+		return a.getFileUrl(appPackage)
+	}
+}
+
+// getAliyunOssUrl 获取阿里云OSS URL
+func (a *AppApi) getAliyunOssUrl(appPackage *projectModel.AppPackage) (string, error) {
+	// 检查必要字段
+	if appPackage.ObjectName == nil || *appPackage.ObjectName == "" {
+		return "", errors.New("OSS对象名称为空")
+	}
+
+	objectName := *appPackage.ObjectName
+
+	// 公开文件：直接返回公开URL
+	if strings.HasPrefix(objectName, "public/") {
+		return a.buildPublicUrl(objectName), nil
+	}
+
+	// 私有文件：生成签名URL
+	fileName := "package.apk"
+	if appPackage.FileName != nil {
+		fileName = *appPackage.FileName
+	}
+
+	signedUrl, err := a.GenerateApkDownloadUrl(objectName, fileName, 300) // 5分钟
+	if err != nil {
+		return "", fmt.Errorf("生成签名URL失败: %w", err)
+	}
+
+	return signedUrl, nil
+}
+
+// getFileUrl 获取文件URL（本地或其他OSS）
+func (a *AppApi) getFileUrl(appPackage *projectModel.AppPackage) (string, error) {
+	if appPackage.FileURL == nil || *appPackage.FileURL == "" {
+		return "", errors.New("文件URL为空")
+	}
+	return *appPackage.FileURL, nil
+}
+
+// buildPublicUrl 构建公开文件URL
+func (a *AppApi) buildPublicUrl(objectName string) string {
+	return fmt.Sprintf("https://%s.%s/%s",
+		global.GVA_CONFIG.AliyunOSS.BucketName,
+		global.GVA_CONFIG.AliyunOSS.Endpoint,
+		objectName,
+	)
+}
+
+// 生成APK下载的签名URL
+func (a AppApi) GenerateApkDownloadUrl(objectName string, fileName string, expireSeconds int64) (string, error) {
+	// 设置强制下载
+	options := []oss.Option{
+		oss.ResponseContentDisposition(fmt.Sprintf(`attachment; filename="%s"`, fileName)),
+	}
+	bucket, err := upload.NewBucket()
+	if err != nil {
+		global.GVA_LOG.Error("functiosn AliyunOSS.NewBucket() Failed", zap.Any("err", err.Error()))
+		return "", errors.New("function AliyunOSS.NewBucket() Failed, err:" + err.Error())
+	}
+	// 生成签名URL（有效期1小时）
+	signedUrl, err := bucket.SignURL(objectName, oss.HTTPGet, expireSeconds, options...)
+	if err != nil {
+		return "", err
+	}
+
+	return signedUrl, nil
 }
 
 func (a AppApi) getFreeIOSAccount() string {
