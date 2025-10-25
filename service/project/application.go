@@ -148,7 +148,7 @@ func (a *ApplicationService) GetAppByAccountCategory(req request.FilterAccountAp
 	}
 	result = make([]response.AccountAppResp, 0, len(applicationList))
 	for _, v := range applicationList {
-		accountSalesAccount := v.AccountSalesAccount
+		accountSalesAccount := v.AccountSalesCount
 		if accountSalesAccount == 0 {
 			accountSalesAccount = utils.RandNumber(50, 999)
 		}
