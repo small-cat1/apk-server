@@ -123,10 +123,10 @@ func (a BaseApi) Register(c *gin.Context) {
 		return
 	}
 	// 检查手机号注册频率（防止用同一手机号反复注册）
-	if err := checkPhoneRegisterFrequency(req.Phone); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
+	//if err := checkPhoneRegisterFrequency(req.Phone); err != nil {
+	//	response.FailWithMessage(err.Error(), c)
+	//	return
+	//}
 	// 检查手机号是否已注册
 	if userExists, _ := checkPhoneExists(req.Phone); userExists {
 		response.FailWithMessage("该手机号已被注册", c)
