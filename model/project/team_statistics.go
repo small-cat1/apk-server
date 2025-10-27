@@ -11,13 +11,13 @@ type TeamStatistics struct {
 	TotalConsumption float64 `gorm:"type:decimal(12,2);default:0.00;comment:直属下级总消费" json:"totalConsumption"`
 	TotalCommission  float64 `gorm:"type:decimal(10,2);default:0.00;comment:累计获得佣金" json:"totalCommission"`
 	// 等级相关
-	CurrentTierID *int `gorm:"index;comment:当前阶梯等级ID" json:"currentTierId"`
+	CurrentTierID *int      `gorm:"index;comment:当前阶梯等级ID" json:"currentTierId"`
+	CreatedAt     time.Time `gorm:"comment:创建时间" json:"createdAt"`
+	UpdatedAt     time.Time `gorm:"comment:更新时间" json:"updatedAt"`
+
 	// 关联
 	CurrentTier *CommissionTier `gorm:"foreignKey:CurrentTierID" json:"currentTier,omitempty"`
 	User        *User           `gorm:"foreignKey:UserID" json:"user,omitempty"`
-
-	CreatedAt time.Time `gorm:"comment:创建时间" json:"createdAt"`
-	UpdatedAt time.Time `gorm:"comment:更新时间" json:"updatedAt"`
 }
 
 func (TeamStatistics) TableName() string {
