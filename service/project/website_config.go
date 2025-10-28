@@ -106,14 +106,12 @@ func (s *SystemConfigService) GetConfigByKey(scope, key string) (interface{}, er
 		}
 		return nil, fmt.Errorf("failed to get config: %w", err)
 	}
-
 	// 尝试解析JSON值
 	var value interface{}
 	if err := json.Unmarshal([]byte(config.Value), &value); err != nil {
 		// 如果解析失败，直接返回字符串值
 		return config.Value, nil
 	}
-
 	return value, nil
 }
 

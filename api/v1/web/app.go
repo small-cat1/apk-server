@@ -353,7 +353,7 @@ func (a AppApi) getFreeIOSAccount() string {
 		global.GVA_LOG.Error("获取免费IOS账号失败", zap.Error(err))
 		return ""
 	}
-
+	global.GVA_LOG.Error("调试", zap.Any("data", data))
 	// 解析账号列表
 	var accounts []string
 	accountsByte := data.(string)
