@@ -353,36 +353,71 @@ func (a AppApi) getFreeIOSAccount() string {
 		global.GVA_LOG.Error("获取免费IOS账号失败", zap.Error(err))
 		return ""
 	}
-	global.GVA_LOG.Error("调试", zap.Any("data", data))
 	// 解析账号列表
-	var accounts []string
-	accountsByte := data.(string)
-	err = json.Unmarshal([]byte(accountsByte), &accounts)
+	accounts, err := parseAccounts(data)
 	if err != nil {
-		global.GVA_LOG.Error("解析IOS账号失败", zap.Error(err))
+		global.GVA_LOG.Error("解析IOS账号失败",
+			zap.Error(err),
+			zap.String("dataType", fmt.Sprintf("%T", data)))
 		return ""
 	}
-
-	// 检查是否有账号
-	if len(accounts) == 0 {
-		global.GVA_LOG.Warn("IOS账号列表为空")
-		return ""
-	}
-
-	// 过滤掉空账号
-	var validAccounts []string
-	for _, account := range accounts {
-		if account != "" {
-			validAccounts = append(validAccounts, account)
-		}
-	}
+	// 过滤并选择账号
+	validAccounts := filterValidAccounts(accounts)
 	if len(validAccounts) == 0 {
 		global.GVA_LOG.Warn("没有有效的IOS账号")
 		return ""
 	}
-	// 随机选取一个账号
-	rand.NewSource(time.Now().UnixNano())
-	randomIndex := rand.Intn(len(validAccounts))
-	selectedAccount := validAccounts[randomIndex]
-	return selectedAccount
+	// 随机选取
+	return randomSelectAccount(validAccounts)
+}
+
+// 解析账号 - 支持多种数据类型
+func parseAccounts(data interface{}) ([]string, error) {
+	var accounts []string
+
+	switch v := data.(type) {
+	case string:
+		// JSON 字符串
+		if err := json.Unmarshal([]byte(v), &accounts); err != nil {
+			return nil, fmt.Errorf("解析JSON失败: %w", err)
+		}
+
+	case []interface{}:
+		// 接口数组
+		for _, item := range v {
+			if str, ok := item.(string); ok {
+				accounts = append(accounts, str)
+			}
+		}
+
+	case []string:
+		// 字符串数组
+		accounts = v
+
+	default:
+		return nil, fmt.Errorf("不支持的数据类型: %T", v)
+	}
+
+	return accounts, nil
+}
+
+// 过滤有效账号
+func filterValidAccounts(accounts []string) []string {
+	var valid []string
+	for _, account := range accounts {
+		trimmed := strings.TrimSpace(account)
+		if trimmed != "" {
+			valid = append(valid, trimmed)
+		}
+	}
+	return valid
+}
+
+// 随机选择账号
+func randomSelectAccount(accounts []string) string {
+	if len(accounts) == 0 {
+		return ""
+	}
+	rand.Seed(time.Now().UnixNano())
+	return accounts[rand.Intn(len(accounts))]
 }
