@@ -159,23 +159,31 @@ func (a AppApi) handleDownloadLogic(c *gin.Context, appID uint, platform constan
 		return nil, fmt.Errorf("获取应用%s安装包失败", platform.String())
 	}
 
-	// 检查是否有可用的安装包
-	if platform == constants.PlatformAndroid && len(appInfo.Packages) == 0 {
-		return nil, fmt.Errorf("%s设备下暂无支持的安装包", platform.String())
-	}
-
-	appPackage := appInfo.Packages[0]
-
 	// 如果是免费应用，直接返回下载信息
 	if appInfo.IsFree != nil && *appInfo.IsFree {
-		return a.buildDownloadResp(false, true, platform, &appPackage, "success"), nil
+		// 根据平台处理
+		switch platform {
+		case constants.PlatformIOS:
+			return &projectRes.DownloadResp{
+				CanDownload:    true,
+				DownloadReason: "success",
+				PackageDetail:  a.getFreeIOSAccount(),
+			}, nil
+		case constants.PlatformAndroid:
+			// 检查是否有可用的安装包
+			if len(appInfo.Packages) == 0 {
+				return nil, fmt.Errorf("%s设备下暂无支持的安装包", platform.String())
+			}
+			appPackage := appInfo.Packages[0]
+			return a.handleAndroidDownload(&appPackage)
+		}
 	}
 	// 收费应用，检查用户权限
-	return a.checkUserPermission(c, platform, &appPackage)
+	return a.checkUserPermission(c, platform, &appInfo)
 }
 
 // checkUserPermission 检查用户下载权限
-func (a AppApi) checkUserPermission(c *gin.Context, platform constants.Platform, appPackage *projectModel.AppPackage) (*projectRes.DownloadResp, error) {
+func (a AppApi) checkUserPermission(c *gin.Context, platform constants.Platform, appInfo *projectModel.Application) (*projectRes.DownloadResp, error) {
 	userID := utils.GetUserID(c)
 	userDetail, err := UserService.GetUserDetail(project.WithID(userID))
 	if err != nil {
@@ -185,21 +193,6 @@ func (a AppApi) checkUserPermission(c *gin.Context, platform constants.Platform,
 
 	// 未付费用户
 	if len(userDetail.Memberships) == 0 {
-		//url, err := a.GenerateApkDownloadUrl(
-		//	"private/package/2025-10-23/Google Chrome_141.0.7390.43_APKPure.apk",
-		//	"Google Chrome_141.0.7390.43_APKPure.apk",
-		//	300,
-		//)
-		//if err != nil {
-		//	return nil, err
-		//}
-		//return &projectRes.DownloadResp{
-		//	CanDownload: true,
-		//	PackageUrl:  url,
-		//	//PackageDetail:  "账号georgdowbigginpksu4417@gmail.com密码Aa2501d 密保答案：mm55----mm----mm77----1990年1月1日",
-		//	PackageDetail:  "测试test@gmail.com密码Aa123456",
-		//	DownloadReason: "success",
-		//}, nil
 		return &projectRes.DownloadResp{
 			CanDownload:    false,
 			DownloadReason: "普通用户无法下载，请升级VIP后下载",
@@ -209,11 +202,26 @@ func (a AppApi) checkUserPermission(c *gin.Context, platform constants.Platform,
 	// 检查会员权限
 	hasPermission := a.validateUserMembership(userDetail.Memberships, platform)
 	if hasPermission {
-		//vip用户从用户套餐的详情里面获取账号
-		appPackage.FileURL = &userDetail.Memberships[0].Detail
-		return a.buildDownloadResp(true, true, platform, appPackage, "success"), nil
+		// 根据平台处理
+		switch platform {
+		case constants.PlatformIOS:
+			downloadAccount := userDetail.Memberships[0].Detail
+			return &projectRes.DownloadResp{
+				CanDownload:    true,
+				DownloadReason: "success",
+				PackageDetail:  downloadAccount,
+			}, nil
+		case constants.PlatformAndroid:
+			// 检查是否有可用的安装包
+			if len(appInfo.Packages) == 0 {
+				return nil, fmt.Errorf("%s设备下暂无支持的安装包", platform.String())
+			}
+			appPackage := appInfo.Packages[0]
+			//vip用户从用户套餐的详情里面获取账号
+			appPackage.FileURL = &userDetail.Memberships[0].Detail
+			return a.handleAndroidDownload(&appPackage)
+		}
 	}
-
 	return &projectRes.DownloadResp{
 		CanDownload:    false,
 		DownloadReason: "用户暂无权限下载,请升级套餐",
@@ -241,53 +249,21 @@ func (a AppApi) validateUserMembership(memberships []projectModel.UserMembership
 	return false
 }
 
-// buildDownloadResp 构建下载响应
-func (a *AppApi) buildDownloadResp(
-	isVip bool,
-	canDownload bool,
-	platform constants.Platform,
-	appPackage *projectModel.AppPackage,
-	reason string,
-) *projectRes.DownloadResp {
-	resp := &projectRes.DownloadResp{
-		CanDownload:    canDownload,
-		DownloadReason: reason,
-	}
-
-	// 不允许下载时直接返回
-	if !canDownload {
-		return resp
-	}
-
-	// 根据平台处理
-	switch platform {
-	case constants.PlatformIOS:
-		a.handleIOSDownload(resp, isVip, appPackage)
-	case constants.PlatformAndroid:
-		a.handleAndroidDownload(resp, appPackage)
-	}
-
-	return resp
-}
-
-// handleIOSDownload 处理iOS下载
-func (a *AppApi) handleIOSDownload(resp *projectRes.DownloadResp, isVip bool, appPackage *projectModel.AppPackage) {
-	if isVip {
-		// VIP用户：生成下载链接
-		if url, err := a.getPackageUrl(appPackage); err == nil {
-			resp.PackageUrl = url
-		}
-	} else {
-		// 非VIP用户：返回免费账号
-		resp.PackageDetail = a.getFreeIOSAccount()
-	}
-}
-
 // handleAndroidDownload 处理Android下载
-func (a *AppApi) handleAndroidDownload(resp *projectRes.DownloadResp, appPackage *projectModel.AppPackage) {
-	if url, err := a.getPackageUrl(appPackage); err == nil {
-		resp.PackageUrl = url
+func (a *AppApi) handleAndroidDownload(appPackage *projectModel.AppPackage) (*projectRes.DownloadResp, error) {
+	url, err := a.getPackageUrl(appPackage)
+	if err == nil {
+		return &projectRes.DownloadResp{
+			CanDownload:    true,
+			DownloadReason: "success",
+			PackageUrl:     url,
+		}, nil
 	}
+	global.GVA_LOG.Error("生成安卓下载地址失败", zap.Error(err))
+	return &projectRes.DownloadResp{
+		CanDownload:    false,
+		DownloadReason: "下载地址获取失败",
+	}, nil
 }
 
 // getPackageUrl 获取安装包下载URL（核心方法）
@@ -296,7 +272,6 @@ func (a *AppApi) getPackageUrl(appPackage *projectModel.AppPackage) (string, err
 	if appPackage == nil {
 		return "", errors.New("安装包信息为空")
 	}
-
 	// 2. 根据OSS类型处理
 	switch global.GVA_CONFIG.System.OssType {
 	case "aliyun-oss":
