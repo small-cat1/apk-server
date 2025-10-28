@@ -7,4 +7,5 @@ type AliyunOSS struct {
 	BucketName      string `mapstructure:"bucket-name" json:"bucket-name" yaml:"bucket-name"`
 	BucketUrl       string `mapstructure:"bucket-url" json:"bucket-url" yaml:"bucket-url"`
 	BasePath        string `mapstructure:"base-path" json:"base-path" yaml:"base-path"`
+	Region          string `mapstructure:"region" json:"region" yaml:"region"` //  ← 阿里云区域，不变,例如 oss-cn-hangzhou
 }

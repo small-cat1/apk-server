@@ -16,6 +16,7 @@ type ApiGroup struct {
 	AppAccountApi
 	SystemAnnouncementApi
 	CommissionTierApi
+	UploadApi
 }
 
 var (

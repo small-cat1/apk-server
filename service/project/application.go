@@ -57,13 +57,13 @@ func (a *ApplicationService) FilterAppsByCategory(req request.FilterAppRequest) 
 	if req.CategoryId == 0 {
 		// 查找账号分类
 		err = global.GVA_DB.Model(&project.AppCategory{}).
-			Where("account_status = ?", 1).
+			Where("is_active = ?", 1).
 			Pluck("id", &cid).Error
 	} else {
 		var category project.AppCategory
 		// 查找账号分类
 		err = global.GVA_DB.Model(&project.AppCategory{}).
-			Where("id = ? and account_status = ?", req.CategoryId, 1).
+			Where("id = ? and is_active = ?", req.CategoryId, 1).
 			First(&category).Error
 		if err != nil {
 			return nil, 0, err

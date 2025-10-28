@@ -50,7 +50,7 @@ func (a AppApi) GetFilterApps(c *gin.Context) {
 	list, total, err := AppService.FilterAppsByCategory(req)
 	if err != nil {
 		global.GVA_LOG.Error("获取分类列表应用失败!", zap.Error(err))
-		response.FailWithMessage("获取分类列表应用失败"+err.Error(), c)
+		response.FailWithMessage("获取分类列表应用失败", c)
 		return
 	}
 	response.OkWithDetailed(response.PageResult{
@@ -160,7 +160,7 @@ func (a AppApi) handleDownloadLogic(c *gin.Context, appID uint, platform constan
 	}
 
 	// 检查是否有可用的安装包
-	if len(appInfo.Packages) == 0 {
+	if platform == constants.PlatformAndroid && len(appInfo.Packages) == 0 {
 		return nil, fmt.Errorf("%s设备下暂无支持的安装包", platform.String())
 	}
 

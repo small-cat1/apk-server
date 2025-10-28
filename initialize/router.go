@@ -103,6 +103,7 @@ func Routers() *gin.Engine {
 		projectRouter.InitAppAccountRouter(PrivateGroup)           // 应用账号路由
 		projectRouter.InitSystemAnnouncementRouter(PrivateGroup)   // 公告路由
 		projectRouter.InitCommissionTierRouter(PrivateGroup)       // 分佣规则路由
+		projectRouter.InitUploadRoute(PrivateGroup)                // 上传路由
 
 	}
 

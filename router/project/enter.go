@@ -16,6 +16,7 @@ type RouterGroup struct {
 	AppAccountRouter
 	SystemAnnouncementRouter
 	CommissionTierRouter
+	UploadRoute
 }
 
 var (
