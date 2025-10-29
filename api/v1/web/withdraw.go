@@ -23,12 +23,12 @@ func (u *WithdrawApi) Withdraw(c *gin.Context) {
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		global.GVA_LOG.Error("用户提现参数不正确！", zap.Error(err))
-		response.OkWithMessage("参数不正确！", c)
+		response.FailWithMessage("参数不正确！", c)
 		return
 	}
 	err = req.Validate()
 	if err != nil {
-		response.OkWithMessage(err.Error(), c)
+		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	// 3. 调用服务层

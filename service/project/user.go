@@ -388,7 +388,7 @@ func (u *UserService) ApplyWithdraw(userID uint, req request.UserWithdrawRequest
 		if err := tx.Model(&account).Updates(map[string]interface{}{
 			"available_amount": gorm.Expr("available_amount - ?", req.Amount),
 			"frozen_amount":    gorm.Expr("frozen_amount + ?", req.Amount),
-			"update_time":      time.Now(),
+			"updated_at":       time.Now(),
 		}).Error; err != nil {
 			return errors.New("冻结提现金额失败")
 		}
