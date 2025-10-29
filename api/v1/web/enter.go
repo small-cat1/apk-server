@@ -13,6 +13,7 @@ type ApiGroup struct {
 	PaymentApi
 	SystemAnnouncementApi
 	CommissionTierApi
+	WithdrawApi
 }
 
 var (

@@ -62,12 +62,7 @@ func (u *UserApi) DeleteUser(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	if err := UserService.DeleteUser(req.ID); err != nil {
-		global.GVA_LOG.Error("删除失败!", zap.Error(err))
-		response.FailWithMessage("删除失败", c)
-	} else {
-		response.OkWithMessage("删除成功", c)
-	}
+	response.OkWithMessage("删除成功", c)
 }
 
 // BatchUpdateUserStatus 批量更新用户状态

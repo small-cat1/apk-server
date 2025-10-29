@@ -40,9 +40,9 @@ func (UserMembership) TableName() string {
 
 // IsActive 检查会员是否有效
 func (u *UserMembership) IsActive() bool {
-	// 首先检查状态是否为 active
-	if u.Status.IsActive() {
-		return false
+	// 添加 ! 取反
+	if !u.Status.IsActive() { // 如果状态不是 active
+		return false // 返回 false
 	}
 	// 如果没有结束时间，说明是终身会员，直接返回 true
 	if u.EndDate == nil {

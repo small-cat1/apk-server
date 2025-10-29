@@ -5,6 +5,7 @@ import (
 	"ApkAdmin/global"
 	"ApkAdmin/model/project"
 	"ApkAdmin/model/project/request"
+	"ApkAdmin/model/project/response"
 	"ApkAdmin/utils"
 	"crypto/rand"
 	"errors"
@@ -12,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"time"
 )
 
@@ -165,24 +167,6 @@ func (u *UserService) GetSimpleUser(conditions ...func(*gorm.DB) *gorm.DB) (user
 	return user, err
 }
 
-// GetUserDetail  获取用户详情
-func (u *UserService) GetUserDetail(conditions ...func(*gorm.DB) *gorm.DB) (user project.User, err error) {
-	query := global.GVA_DB.Model(&project.User{})
-	// 应用所有条件
-	for _, condition := range conditions {
-		query = condition(query)
-	}
-	err = query.Preload("Statistics").
-		Preload("CommissionSimple").
-		Preload("Memberships", func(db *gorm.DB) *gorm.DB {
-			return db.Order("created_at DESC")
-		}).
-		Preload("Memberships.Plan"). // 👈 添加这一行来关联 Plan
-		Preload("Referrer").
-		First(&user).Error
-	return user, err
-}
-
 // RegisterUser 用户注册
 func (u *UserService) RegisterUser(req request.BaseRegisterRequest, clientIP string) error {
 	// 邀请码
@@ -289,20 +273,6 @@ func (u *UserService) RegisterUser(req request.BaseRegisterRequest, clientIP str
 	})
 }
 
-// DeleteUser 删除用户
-func (u *UserService) DeleteUser(id uint) error {
-	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		// 软删除用户
-		if err := tx.Delete(&project.User{}, id).Error; err != nil {
-			return err
-		}
-		// 可以选择级联删除相关数据，或者保留用于审计
-		// 这里选择保留会员记录和订单记录
-
-		return nil
-	})
-}
-
 // BatchUpdateUserStatus 批量更新用户状态
 func (u *UserService) BatchUpdateUserStatus(ids []uint, status string) error {
 	return global.GVA_DB.Model(&project.User{}).
@@ -347,9 +317,198 @@ func (u *UserService) ChangeUserPassword(id uint, req request.ChangeUserPassword
 }
 
 // ApplyWithdraw 用户提现申请
-func (u *UserService) ApplyWithdraw(id uint, req request.UserWithdrawRequest) error {
+// ApplyWithdraw 申请提现
+func (u *UserService) ApplyWithdraw(userID uint, req request.UserWithdrawRequest) error {
+	// 1. 验证请求参数
+	if err := req.Validate(); err != nil {
+		return err
+	}
 
-	return nil
+	// 2. 获取提现规则配置
+	config, err := systemConfigService.GetConfig("commission")
+	if err != nil {
+		return errors.New("获取提现配置失败")
+	}
+
+	// 解析配置
+	withdrawConfig, err := utils.ParseWithdrawConfig(config)
+	if err != nil {
+		return errors.New("提现配置格式错误")
+	}
+
+	// 3. 验证提现金额范围
+	if req.Amount < withdrawConfig.MinWithdraw {
+		return fmt.Errorf("提现金额不能低于 %.2f 元", withdrawConfig.MinWithdraw)
+	}
+	if req.Amount > withdrawConfig.MaxWithdraw {
+		return fmt.Errorf("提现金额不能超过 %.2f 元", withdrawConfig.MaxWithdraw)
+	}
+
+	// 4. 验证提现方式是否支持
+	if !utils.Contains(withdrawConfig.WithdrawMethods, req.WithdrawType) {
+		return errors.New("不支持该提现方式")
+	}
+
+	// 5. 使用事务处理提现流程
+	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
+		// 5.1 检查今日提现次数
+		today := time.Now().Truncate(24 * time.Hour)
+		var todayCount int64
+		if err := tx.Model(&project.WithdrawRecord{}).
+			Where("user_id = ? AND create_time >= ?", userID, today).
+			Count(&todayCount).Error; err != nil {
+			return errors.New("查询提现记录失败")
+		}
+
+		if todayCount >= int64(withdrawConfig.DailyWithdrawCount) {
+			return fmt.Errorf("今日提现次数已达上限(%d次)", withdrawConfig.DailyWithdrawCount)
+		}
+
+		// 5.2 查询用户佣金账户（加锁）
+		var account project.UserCommissionAccount
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+			Where("user_id = ?", userID).
+			First(&account).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return errors.New("佣金账户不存在")
+			}
+			return errors.New("查询账户信息失败")
+		}
+
+		// 5.3 检查可提现余额
+		if account.AvailableAmount < req.Amount {
+			return fmt.Errorf("可提现余额不足，当前余额：%.2f 元", account.AvailableAmount)
+		}
+
+		// 5.4 计算手续费和实际到账金额
+		fee := req.Amount * withdrawConfig.WithdrawFee / 100
+		actualAmount := req.Amount - fee
+
+		// 5.5 冻结提现金额（从可用金额转到冻结金额）
+		if err := tx.Model(&account).Updates(map[string]interface{}{
+			"available_amount": gorm.Expr("available_amount - ?", req.Amount),
+			"frozen_amount":    gorm.Expr("frozen_amount + ?", req.Amount),
+			"update_time":      time.Now(),
+		}).Error; err != nil {
+			return errors.New("冻结提现金额失败")
+		}
+		// 5.6 生成提现单号
+		withdrawNo := utils.GenerateWithdrawNo(userID)
+		// 5.7 获取账户信息
+		accountName, accountNo := req.GetAccountInfo()
+		// 5.8 创建提现记录
+		record := project.WithdrawRecord{
+			UserID:       int64(userID),
+			WithdrawNo:   withdrawNo,
+			Amount:       req.Amount,
+			Fee:          fee,
+			ActualAmount: actualAmount,
+			WithdrawType: req.WithdrawType,
+			AccountName:  &accountName,
+			AccountNo:    &accountNo,
+			Status:       project.WithdrawStatusPending,
+			CreateTime:   time.Now(),
+			UpdateTime:   time.Now(),
+		}
+		if err := tx.Create(&record).Error; err != nil {
+			return errors.New("创建提现记录失败")
+		}
+		return nil
+	})
+}
+
+// GetWithdrawRecord 获取提现记录（带筛选）
+func (u *UserService) GetWithdrawRecord(userID uint, req request.WithdrawRecordRequest) (response.WithdrawRecordListResp, error) {
+	var result response.WithdrawRecordListResp
+	var records []project.WithdrawRecord
+
+	// 2. 计算分页参数
+	limit := req.PageSize
+	offset := req.PageSize * (req.Page - 1)
+
+	// 3. 构建基础查询
+	db := global.GVA_DB.Model(&project.WithdrawRecord{}).
+		Where("user_id = ?", userID)
+
+	// 4. 添加状态筛选
+	if statusConditions := req.GetStatusCondition(); statusConditions != nil {
+		db = db.Where("status IN ?", statusConditions)
+	}
+
+	// 5. 添加时间筛选
+	if startTime, endTime := req.GetTimeRange(); startTime != nil {
+		if endTime != nil {
+			db = db.Where("create_time BETWEEN ? AND ?", startTime, endTime)
+		} else {
+			db = db.Where("create_time >= ?", startTime)
+		}
+	}
+
+	// 6. 查询总数
+	if err := db.Count(&result.Total).Error; err != nil {
+		return result, err
+	}
+
+	// 7. 如果没有数据，直接返回
+	if result.Total == 0 {
+		result.List = []response.WithdrawRecordResp{}
+		return result, nil
+	}
+
+	// 8. 查询列表数据
+	if err := db.Order("create_time DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&records).Error; err != nil {
+		return result, err
+	}
+
+	// 9. 转换为响应格式
+	result.List = make([]response.WithdrawRecordResp, 0, len(records))
+	for _, record := range records {
+		resp := response.WithdrawRecordResp{
+			ID:           record.ID,
+			WithdrawNo:   record.WithdrawNo,
+			Amount:       record.Amount,
+			Fee:          record.Fee,
+			ActualAmount: record.ActualAmount,
+			WithdrawType: record.WithdrawType,
+			AccountName:  record.AccountName,
+			AccountNo:    record.AccountNo,
+			Status:       record.Status,
+			RejectReason: record.RejectReason,
+			AuditTime:    record.AuditTime,
+			CompleteTime: record.CompleteTime,
+			Remark:       record.Remark,
+			CreateTime:   record.CreateTime,
+			UpdateTime:   record.UpdateTime,
+		}
+
+		// 账号脱敏
+		resp.MaskAccountNo()
+
+		result.List = append(result.List, resp)
+	}
+
+	// 10. 查询统计数据（累计提现金额和次数）
+	var stats struct {
+		TotalAmount float64
+		TotalCount  int64
+	}
+
+	// 统计已完成的提现记录
+	statsDB := global.GVA_DB.Model(&project.WithdrawRecord{}).
+		Where("user_id = ?", userID).
+		Where("status = ?", project.WithdrawStatusCompleted)
+
+	if err := statsDB.Select("COALESCE(SUM(amount), 0) as total_amount, COUNT(*) as total_count").
+		Scan(&stats).Error; err != nil {
+		// 统计失败不影响列表返回，只记录日志
+		global.GVA_LOG.Error("查询提现统计数据失败: " + err.Error())
+	}
+	result.TotalWithdrawn = stats.TotalAmount
+	result.TotalCount = stats.TotalCount
+	return result, nil
 }
 
 // generateReferralCode 生成推荐码

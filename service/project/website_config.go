@@ -12,6 +12,8 @@ import (
 
 type SystemConfigService struct{}
 
+var systemConfigService = SystemConfigService{}
+
 // GetConfig 获取指定scope的配置
 func (s *SystemConfigService) GetConfig(scope string) (map[string]interface{}, error) {
 	var configs []project.SystemConfig

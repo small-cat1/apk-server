@@ -4,23 +4,9 @@ import (
 	"ApkAdmin/constants"
 	"encoding/json"
 	"github.com/google/uuid"
+	"strings"
 	"time"
 )
-
-// AccountStatus 账户状态
-type AccountStatus string
-
-const (
-	AccountStatusActive              AccountStatus = "active"               // 正常
-	AccountStatusSuspended           AccountStatus = "suspended"            // 暂停
-	AccountStatusDeleted             AccountStatus = "deleted"              // 已删除
-	AccountStatusPendingVerification AccountStatus = "pending_verification" // 待验证
-	AccountStatusBanned              AccountStatus = "banned"               // 被封禁
-)
-
-func (s AccountStatus) IsNormal() bool {
-	return s == AccountStatusActive
-}
 
 type UserLogin interface {
 	GetUsername() string
@@ -73,6 +59,9 @@ type User struct {
 	Memberships      []UserMembership             `json:"memberships" gorm:"foreignKey:UserID"`
 	Referrer         *User                        `json:"referrer,omitempty" gorm:"foreignKey:ReferrerID"`
 	Referrals        []User                       `json:"referrals,omitempty" gorm:"foreignKey:ReferrerID"`
+
+	// ✅ 新增这一行
+	DirectReferralsCount int64 `json:"directReferralsCount" gorm:"-"`
 }
 
 func (u User) GetUsername() string {
@@ -95,28 +84,94 @@ func (u User) GetEmail() string {
 	return u.Email
 }
 
-// UserStatistics 用户统计表
-type UserStatistics struct {
-	UserID              uint       `json:"user_id" gorm:"primaryKey;comment:用户ID"`
-	TotalDownloads      uint       `json:"total_downloads" gorm:"default:0;comment:总下载次数"`
-	TotalSpent          float64    `json:"total_spent" gorm:"type:decimal(10,2);default:0.00;comment:总消费金额"`
-	TotalOrders         uint       `json:"total_orders" gorm:"default:0;comment:总订单数"`
-	SuccessfulReferrals uint       `json:"successful_referrals" gorm:"default:0;comment:成功推荐人数"`
-	LastDownloadAt      *time.Time `json:"last_download_at" gorm:"comment:最后下载时间"`
-	LastOrderAt         *time.Time `json:"last_order_at" gorm:"comment:最后订单时间"`
-	CreatedAt           time.Time  `json:"created_at" gorm:"comment:创建时间"`
-	UpdatedAt           time.Time  `json:"updated_at" gorm:"comment:更新时间"`
+// MaskPhone 脱敏手机号
+func (u *User) MaskPhone() string {
+	if u.Phone == nil || *u.Phone == "" {
+		return ""
+	}
+	phone := *u.Phone
+	if len(phone) == 11 {
+		return phone[:3] + "****" + phone[7:]
+	}
+	return phone
+}
 
-	// 关联关系
-	User *User `json:"user,omitempty" gorm:"foreignKey:UserID"`
+// MaskEmail 脱敏邮箱
+func (u *User) MaskEmail() string {
+	if u.Email == "" {
+		return ""
+	}
+
+	parts := strings.Split(u.Email, "@")
+	if len(parts) != 2 {
+		return u.Email
+	}
+
+	username := parts[0]
+	domain := parts[1]
+
+	if len(username) <= 1 {
+		return "*@" + domain
+	} else if len(username) <= 3 {
+		return username[:1] + "**@" + domain
+	} else {
+		return username[:1] + "***@" + domain
+	}
+}
+
+// GetAccountStatusText 获取账户状态文本
+func (u *User) GetAccountStatusText() string {
+	switch u.AccountStatus {
+	case constants.AccountStatusNormal:
+		return "正常"
+	case constants.AccountStatusSuspended:
+		return "已暂停"
+	case constants.AccountStatusDeleted:
+		return "已删除"
+	case constants.AccountStatusPending:
+		return "待验证"
+	case constants.AccountStatusDisabled:
+		return "已封禁"
+	default:
+		return "未知"
+	}
+}
+
+// IsNewUser 是否新用户（注册7天内）
+func (u *User) IsNewUser() bool {
+	return time.Since(u.CreatedAt) <= 7*24*time.Hour
+}
+
+// GetSecurityLevel 获取安全等级
+func (u *User) GetSecurityLevel() string {
+	score := u.GetSecurityScore()
+	if score >= 80 {
+		return "high"
+	} else if score >= 50 {
+		return "medium"
+	}
+	return "low"
+}
+
+// GetSecurityScore 计算安全分数
+func (u *User) GetSecurityScore() int {
+	score := 0
+
+	if u.EmailVerified {
+		score += 30
+	}
+	if u.PhoneVerified {
+		score += 30
+	}
+	if u.TwoFactorEnabled {
+		score += 40
+	}
+
+	return score
 }
 
 func (User) TableName() string {
 	return "users"
-}
-
-func (UserStatistics) TableName() string {
-	return "user_statistics"
 }
 
 // IsVerified 检查用户是否已完成验证
