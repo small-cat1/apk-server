@@ -35,4 +35,5 @@ var (
 	systemAnnouncementService    = service.ServiceGroupApp.ProjectServiceGroup.SystemAnnouncementService
 	sysUserService               = service.ServiceGroupApp.SystemServiceGroup.UserService
 	commissionTierService        = service.ServiceGroupApp.ProjectServiceGroup.CommissionTierService
+	commissionDetailService      = service.ServiceGroupApp.ProjectServiceGroup.CommissionDetailService
 )

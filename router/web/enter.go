@@ -13,6 +13,7 @@ type RouterGroup struct {
 	AnnouncementRouter
 	CommissionTierRouter
 	WithdrawRouter
+	CommissionDetailRouter
 }
 
 var (
@@ -26,6 +27,6 @@ var (
 	paymentApi            = api.ApiGroupApp.WebApiGroup.PaymentApi
 	systemAnnouncementApi = api.ApiGroupApp.WebApiGroup.SystemAnnouncementApi
 	commissionTierApi     = api.ApiGroupApp.WebApiGroup.CommissionTierApi
-
-	withdrawApi = api.ApiGroupApp.WebApiGroup.WithdrawApi
+	withdrawApi           = api.ApiGroupApp.WebApiGroup.WithdrawApi
+	commissionDetailApi   = api.ApiGroupApp.WebApiGroup.CommissionDetailApi
 )

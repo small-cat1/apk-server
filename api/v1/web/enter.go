@@ -14,6 +14,7 @@ type ApiGroup struct {
 	SystemAnnouncementApi
 	CommissionTierApi
 	WithdrawApi
+	CommissionDetailApi
 }
 
 var (
@@ -28,4 +29,5 @@ var (
 	systemAnnouncementService = service.ServiceGroupApp.ProjectServiceGroup.SystemAnnouncementService
 	commissionTierService     = service.ServiceGroupApp.ProjectServiceGroup.CommissionTierService
 	systemConfigService       = service.ServiceGroupApp.ProjectServiceGroup.SystemConfigService
+	commissionDetailService   = service.ServiceGroupApp.ProjectServiceGroup.CommissionDetailService
 )

@@ -41,6 +41,7 @@ func initWebRouter(engine *gin.Engine) {
 		webRouter.InitPaymentRouter(PrivateGroup)
 		webRouter.InitCommissionTier(PrivateGroup)
 		webRouter.InitWithdrawRouter(PrivateGroup)
+		webRouter.InitCommissionDetailRouter(PrivateGroup)
 	}
 
 }
