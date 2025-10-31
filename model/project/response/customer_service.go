@@ -29,6 +29,7 @@ type CustomerServiceConfigResp struct {
 	WorkTime   interface{}             `json:"workTime"`
 	Notice     interface{}             `json:"notice"`
 	ImType     string                  `json:"imType"`
+	ImLink     string                  `json:"imLink"`
 	ImConfig   ImConfig                `json:"imConfig"`
 	Preload    bool                    `json:"preload"`
 }

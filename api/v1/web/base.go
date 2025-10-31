@@ -51,6 +51,7 @@ func (a *BaseApi) CustomerServiceConfig(c *gin.Context) {
 		WorkTime: helper.Get("work_time"),
 		Notice:   helper.Get("notice"),
 		ImType:   "",
+		ImLink:   helper.GetString("im_link"),
 		ImConfig: projectRes.ImConfig{},
 		Preload:  false,
 	}
